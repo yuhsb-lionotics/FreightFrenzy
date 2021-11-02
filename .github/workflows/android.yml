@@ -5,7 +5,8 @@ on:
     branches:
      - master
      - littleRobot
-     - bigRobot 
+     - bigRobot
+     - opencv
   pull_request:
     branches: [ master ]
 
