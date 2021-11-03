@@ -12,4 +12,13 @@ public class Claw {
         this.leftFinger.setDirection(Servo.Direction.FORWARD);
         this.rightFinger.setDirection(Servo.Direction.REVERSE);
     }
+
+    public void setPosition(double endPosition) {
+        this.leftFinger.setPosition(endPosition);
+        this.rightFinger.setPosition(endPosition);
+    }
+
+    public void grabCube() {
+        this.setPosition(0.05);
+    }
 }

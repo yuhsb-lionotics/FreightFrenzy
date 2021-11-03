@@ -13,7 +13,8 @@ public class Hardware extends LinearOpMode {
     //You should put constants here
 
     protected DcMotor frontLeft, frontRight, backLeft, backRight, clawStrafe, clawRotate ;
-    protected Servo clawGrabber;
+    protected Servo leftClawFinger, rightClawFinger;
+
 
     static final double     COUNTS_PER_MOTOR_REV    = 1680 ;    // CHECK THIS
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
@@ -34,9 +35,11 @@ public class Hardware extends LinearOpMode {
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backRight = hardwareMap.dcMotor.get("backRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
-        clawStrafe = hardwareMap.dcMotor.get("clawStrafe");
-        clawRotate = hardwareMap.dcMotor.get("clawRotate");
-        clawGrabber = hardwareMap.servo.get("clawGrab");
+        //clawStrafe = hardwareMap.dcMotor.get("clawStrafe");
+        //clawRotate = hardwareMap.dcMotor.get("clawRotate");
+        leftClawFinger = hardwareMap.servo.get("clawL");
+        rightClawFinger = hardwareMap.servo.get("clawR");
+
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
