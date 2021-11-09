@@ -2,11 +2,15 @@
 
 ## Light Robot 
 
-+ Omniwheels drivetrain
-+ Pulley / Rack pinion (one  DC motor)
-+ Claw with one or two servos
-+ DC motor for spinning the carosel
++ 45 degree Omniwheels drivetrain
++ Claw, with one motor moving it it vertically
++ Two servos for the claw
++ One carousel motor
+
 
 ## Heavy Robot
 
-+ TBD
++ Mechanum Wheels (Coded the same ways)
++ Two motors for claw; one horizontally back and forth, and one rotationally
++ Two servos for the claw
++ One carousel motor
