@@ -5,11 +5,10 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="Test Claw")
 public class TestClaw extends Hardware{
-    Claw claw;
     @Override
     public void runOpMode() throws InterruptedException {
         hardwareSetup();
-        claw = new Claw(leftClawFinger,rightClawFinger);
+
         waitForStart();
 
         claw.setPosition(0);

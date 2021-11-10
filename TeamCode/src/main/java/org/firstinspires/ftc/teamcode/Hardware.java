@@ -14,6 +14,7 @@ public class Hardware extends LinearOpMode {
 
     protected DcMotor frontLeft, frontRight, backLeft, backRight, clawStrafe, clawRotate ;
     protected Servo leftClawFinger, rightClawFinger;
+    protected Claw claw;
 
 
     static final double     COUNTS_PER_MOTOR_REV    = 1680 ;    // CHECK THIS
@@ -35,11 +36,10 @@ public class Hardware extends LinearOpMode {
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backRight = hardwareMap.dcMotor.get("backRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
-        //clawStrafe = hardwareMap.dcMotor.get("clawStrafe");
-        //clawRotate = hardwareMap.dcMotor.get("clawRotate");
+        //clawPulley = hardwareMap.dcMotor.get("clawPulley");
         leftClawFinger = hardwareMap.servo.get("clawL");
         rightClawFinger = hardwareMap.servo.get("clawR");
-
+        claw = new Claw(leftClawFinger,rightClawFinger);
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);

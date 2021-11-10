@@ -21,4 +21,6 @@ public class Claw {
     public void grabCube() {
         this.setPosition(0.05);
     }
+
+    //public void open() {}
 }
