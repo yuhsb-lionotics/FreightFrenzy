@@ -19,8 +19,13 @@ public class Claw {
     }
 
     public void grabCube() {
-        this.setPosition(0.05);
+        this.setPosition(0);
     }
 
     //public void open() {}
+
+    //fit within 18 inches
+    public void contract() {
+
+    }
 }

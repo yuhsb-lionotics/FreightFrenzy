@@ -12,7 +12,7 @@ public class Hardware extends LinearOpMode {
     // Good Luck!
     //You should put constants here
 
-    protected DcMotor frontLeft, frontRight, backLeft, backRight, clawStrafe, clawRotate ;
+    protected DcMotor frontLeft, frontRight, backLeft, backRight, clawPulley ;
     protected Servo leftClawFinger, rightClawFinger;
     protected Claw claw;
 
@@ -28,15 +28,12 @@ public class Hardware extends LinearOpMode {
     // Setup your drivetrain (Define your motors etc.)
     public void hardwareSetup() {
 
-
-
-        // Define your methods of driving (Encoder drive, tank drive, etc.
-
+        //initialize hardware devices
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backRight = hardwareMap.dcMotor.get("backRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
-        //clawPulley = hardwareMap.dcMotor.get("clawPulley");
+        clawPulley = hardwareMap.dcMotor.get("clawPulley");
         leftClawFinger = hardwareMap.servo.get("clawL");
         rightClawFinger = hardwareMap.servo.get("clawR");
         claw = new Claw(leftClawFinger,rightClawFinger);

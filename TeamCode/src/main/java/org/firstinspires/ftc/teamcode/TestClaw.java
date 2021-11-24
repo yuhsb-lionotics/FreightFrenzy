@@ -26,7 +26,7 @@ public class TestClaw extends Hardware{
             telemetry.addData("fingers' position", position);
             telemetry.update();
 
-            sleep(1);
+            sleep(10);
         }
     }
 }
