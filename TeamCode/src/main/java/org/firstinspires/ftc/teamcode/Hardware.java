@@ -40,7 +40,7 @@ public class Hardware extends LinearOpMode {
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.REVERSE); //No idea why this is different than backRight. The wheel was just moving backwards
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

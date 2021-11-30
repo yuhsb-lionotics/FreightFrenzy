@@ -1,4 +1,4 @@
-Plug phone into ____ Revhub
+Plug phone into Right Revhub
 
 Right Revhub:
 
