@@ -22,7 +22,7 @@ public class TeleOp extends Hardware{
             } else if (gamepad1.dpad_down){
                 raiseClaw(-0.5);
             } else if (gamepad1.dpad_left){
-                raiseClawPos(2645, 0.5);
+                raiseClawPos(2590, 0.5);
             } else if (gamepad1.dpad_right){
                 raiseClawPos(0, 0.5);
             } else if (gamepad1.x){
