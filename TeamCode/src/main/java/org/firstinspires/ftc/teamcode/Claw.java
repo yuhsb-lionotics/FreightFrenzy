@@ -14,6 +14,7 @@ public class Claw {
     }
 
     public void setPosition(double endPosition) {
+
         this.leftFinger.setPosition(endPosition);
         this.rightFinger.setPosition(endPosition);
     }

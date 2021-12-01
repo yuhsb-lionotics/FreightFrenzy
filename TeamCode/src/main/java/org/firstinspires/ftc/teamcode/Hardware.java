@@ -163,6 +163,22 @@ public class Hardware extends LinearOpMode {
 
 
     }
+    public void raiseClaw(double power){
+        clawPulley.setPower(power);
+        telemetry.addData("EncoderPos", clawPulley.getCurrentPosition());
+        telemetry.update();
+    }
+    public void encoderToSpecificPos(DcMotor motor, int pos , int power){
+        motor.setTargetPosition(pos);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(power);
+        while (motor.isBusy() && opModeIsActive()){
+            idle();
+        }
+        motor.setPower(0);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     // Last thing is an empty runOpMode because it's a linearopmode
     @Override
     public void runOpMode() throws InterruptedException {

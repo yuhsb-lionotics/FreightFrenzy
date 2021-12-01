@@ -8,14 +8,29 @@ public class TeleOp extends Hardware{
     public void runOpMode() throws InterruptedException {
         hardwareSetup();
         boolean clawOpened = true;
+        int clawPos = 1;
         waitForStart();
+        claw.setPosition(clawPos);
         while(opModeIsActive()){
-            tankControl(1); //CHANGE THIS
-            if (gamepad1.right_bumper) {
-                claw.grabCube();
-            } else if (gamepad1.left_bumper) {
-                //claw.open();
+            tankControl(0.6); //CHANGE THIS
+            if (gamepad1.a) {
+                claw.setPosition(0.55);
+            } else if (gamepad1.b) {
+                claw.setPosition(1);
+            } else if (gamepad1.dpad_up){
+                raiseClaw(0.5);
+            } else if (gamepad1.dpad_down){
+                raiseClaw(-0.5);
+            } else {
+                raiseClaw(0);
             }
+            telemetry.addData("ClawPos",clawPos);
+            telemetry.update();
+
+
+            // Top should be 2545
+
+
 
 
         }
