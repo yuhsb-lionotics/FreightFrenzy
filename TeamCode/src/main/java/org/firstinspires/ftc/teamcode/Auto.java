@@ -6,8 +6,17 @@ public class Auto extends Hardware {
     public int delaySeconds = 0; //seconds to wait for alliance
     public String startingPosition = "Carousel";
 
+    public int duckStartLocation = 1; //ilegal
+    public int drivers = 1; //number of drivers on team
+    public String carouselStatus = "Waiting for start"; // status of variable selector 'carousel'
+
     @Override
     public void runOpMode(){
+        hardwareSetup();
+        selectParameters();
+        waitForStart();
+        telemetry.update();
+
         // Fake values for now. Just showing how to call it
         TensorflowDetector recongnizer = new TensorflowDetector(10,20);
 
