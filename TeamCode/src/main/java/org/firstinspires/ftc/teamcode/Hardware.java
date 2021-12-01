@@ -12,7 +12,7 @@ public class Hardware extends LinearOpMode {
     // Good Luck!
     //You should put constants here
 
-    protected DcMotor frontLeft, frontRight, backLeft, backRight, clawPulley ;
+    protected DcMotor frontLeft, frontRight, backLeft, backRight, clawPulley, carousel ;
     protected Servo leftClawFinger, rightClawFinger;
     protected Claw claw;
 
@@ -37,6 +37,8 @@ public class Hardware extends LinearOpMode {
         leftClawFinger = hardwareMap.servo.get("clawL");
         rightClawFinger = hardwareMap.servo.get("clawR");
         claw = new Claw(leftClawFinger,rightClawFinger);
+        carousel = hardwareMap.dcMotor.get("carousel");
+
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -47,18 +49,21 @@ public class Hardware extends LinearOpMode {
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        carousel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        carousel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Use encoders
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        carousel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData("Status:", "Setup Complete");
         telemetry.update();
@@ -168,7 +173,9 @@ public class Hardware extends LinearOpMode {
         telemetry.addData("EncoderPos", clawPulley.getCurrentPosition());
         telemetry.update();
     }
-    public void encoderToSpecificPos(DcMotor motor, int pos , int power){
+
+
+    public void encoderToSpecificPos(DcMotor motor, int pos , double power){
         motor.setTargetPosition(pos);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(power);
@@ -178,7 +185,12 @@ public class Hardware extends LinearOpMode {
         motor.setPower(0);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-
+    public void raiseClawPos(int pos, double power){
+        encoderToSpecificPos(clawPulley, pos, power);
+    }
+    public void setCaroselPower(double power){
+        carousel.setPower(power);
+    }
     // Last thing is an empty runOpMode because it's a linearopmode
     @Override
     public void runOpMode() throws InterruptedException {

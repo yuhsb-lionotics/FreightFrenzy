@@ -21,8 +21,16 @@ public class TeleOp extends Hardware{
                 raiseClaw(0.5);
             } else if (gamepad1.dpad_down){
                 raiseClaw(-0.5);
-            } else {
+            } else if (gamepad1.dpad_left){
+                raiseClawPos(2645, 0.5);
+            } else if (gamepad1.dpad_right){
+                raiseClawPos(0, 0.5);
+            } else if (gamepad1.x){
+                carousel.setPower(0.5);
+            }
+            else {
                 raiseClaw(0);
+                setCaroselPower(0);
             }
             telemetry.addData("ClawPos",clawPos);
             telemetry.update();
