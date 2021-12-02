@@ -14,21 +14,32 @@ public class Auto extends Hardware {
     @Override
     public void runOpMode(){
         hardwareSetup();
-        //selectParameters();
-        //TensorflowDetector recognizer = new TensorflowDetector(10,20);
+        selectParameters();
+        TensorflowDetector recognizer = new TensorflowDetector(10,20);
         waitForStart();
-        telemetry.update();
+        sleep(delaySeconds * 100);
+        // Move forward
+        // Move to each place of the duck, checking the color sensor
+        // claw to correct position
+        // move to the Shipping Hub (Changes based on starting position)
+        // open claw
+        // Move back
+        // move to carousel, rotate to get the motor on the carousel
+        // spin carousel
+
+        // Move to final place for points
+
+        // Place in the correct location
+        if(startingPosition.equals("Carousel")){
+           idle();
+        } else if (startingPosition.equals("Warehouse")){
+            idle();
+        }
         encoderDrive(0.7,10,-10,10,-10);
         // Fake values for now. Just showing how to call it
 
-        while(opModeIsActive()){
-           /// recognizer.listObjects();
-            sleep(20);
-        }
-
         // Then move to the place.
-        // front backwarsd to the righjt
-        //
+
 
     }
 

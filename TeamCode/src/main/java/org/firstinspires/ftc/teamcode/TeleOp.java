@@ -26,7 +26,7 @@ public class TeleOp extends Hardware{
             } else if (gamepad1.dpad_right){
                 raiseClawPos(0, 0.5);
             } else if (gamepad1.x){
-                carousel.setPower(0.5);
+                carousel.setPower(0.7);
             }
             else {
                 raiseClaw(0);
