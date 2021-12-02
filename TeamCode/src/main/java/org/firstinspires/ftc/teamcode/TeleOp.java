@@ -13,23 +13,44 @@ public class TeleOp extends Hardware{
         claw.setPosition(clawPos);
         while(opModeIsActive()){
             tankControl(0.6); //CHANGE THIS
-            if (gamepad1.a) {
+
+            //control claw fingers
+            if (gamepad2.a) {
+                claw.setPosition(0.55);
+            } else if (gamepad2.b) {
+                claw.setPosition(1);
+            } else if (gamepad1.a) {
                 claw.setPosition(0.55);
             } else if (gamepad1.b) {
                 claw.setPosition(1);
-            } else if (gamepad1.dpad_up){
+            }
+
+            //Control clawPulley
+            if (gamepad2.dpad_up){
                 raiseClaw(0.5);
-            } else if (gamepad1.dpad_down){
+            } else if (gamepad2.dpad_down){
                 raiseClaw(-0.5);
-            } else if (gamepad1.dpad_left){
+            } else if (gamepad2.dpad_left){
                 raiseClawPos(2590, 0.5);
-            } else if (gamepad1.dpad_right){
+            } else if (gamepad2.dpad_right){
                 raiseClawPos(0, 0.5);
+            } else if (gamepad1.dpad_up){
+                raiseClaw(0.7);
+            } else if (gamepad1.dpad_down){
+                raiseClaw(-0.7);
+            } else if (gamepad1.dpad_left){
+                raiseClawPos(2590, 0.7);
+            } else if (gamepad1.dpad_right){
+                raiseClawPos(0, 0.7);
+            } else {
+                raiseClaw(0);
+            }
+
+            if (gamepad2.x){
+                carousel.setPower(0.7);
             } else if (gamepad1.x){
                 carousel.setPower(0.7);
-            }
-            else {
-                raiseClaw(0);
+            } else {
                 setCaroselPower(0);
             }
             telemetry.addData("ClawPos",clawPos);
@@ -37,9 +58,6 @@ public class TeleOp extends Hardware{
 
 
             // Top should be 2545
-
-
-
 
         }
     }

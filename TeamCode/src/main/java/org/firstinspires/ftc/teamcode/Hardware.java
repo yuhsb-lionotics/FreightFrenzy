@@ -180,16 +180,7 @@ public class Hardware extends LinearOpMode {
 
     }
     public void raiseClaw(double power){
-        int pos = clawPulley.getCurrentPosition();
-        if(pos > 2600 && power > 0){
-            clawPulley.setPower(0);
-        } else if (pos < 0 && power < 0){
-            clawPulley.setPower(0);
-        } else if(pos < 2600 && power > 0) {
-            clawPulley.setPower(power);
-        } else if(pos < 0 && power > 0){
-            clawPulley.setPower(power);
-        }
+        clawPulley.setPower(power);
     }
 
 
