@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -15,6 +16,7 @@ public class Hardware extends LinearOpMode {
     protected DcMotor frontLeft, frontRight, backLeft, backRight, clawPulley, carousel ;
     protected Servo leftClawFinger, rightClawFinger;
     protected Claw claw;
+    protected TouchSensor touchSensorLeft, touchSensorRight;
 
 
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // CHECK THIS
@@ -38,6 +40,8 @@ public class Hardware extends LinearOpMode {
         rightClawFinger = hardwareMap.servo.get("clawR");
         claw = new Claw(leftClawFinger,rightClawFinger);
         carousel = hardwareMap.dcMotor.get("carousel");
+        touchSensorLeft = hardwareMap.touchSensor.get("touchSensorLeft");
+        touchSensorRight = hardwareMap.touchSensor.get("touchSensorRight");
 
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -82,7 +86,12 @@ public class Hardware extends LinearOpMode {
         frontRight.setPower(forwardLeftPower);
         backRight.setPower(forwardRightPower);
     }
-
+    public boolean getLeftSensor(){
+        return touchSensorLeft.isPressed();
+    }
+    public boolean getRightSensor(){
+        return touchSensorRight.isPressed();
+    }
     public void driveForward(final double power) {
         strafe(power, power);
     }
@@ -132,6 +141,8 @@ public class Hardware extends LinearOpMode {
             backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
+
+
             // Set powers. For now I'm setting to maxPower, so be careful.
             // In the future I'd like to add some acceleration control through powers, which
             // should help with encoder accuracy. Stay tuned.
@@ -146,7 +157,7 @@ public class Hardware extends LinearOpMode {
             while (opModeIsActive() &&
                     (frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy() )) {
                     // Do nothing
-                    idle();
+                idle();
             }
             // Set Zero Power
             frontRight.setPower(0);

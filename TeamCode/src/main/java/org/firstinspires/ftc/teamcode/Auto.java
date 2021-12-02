@@ -14,8 +14,7 @@ public class Auto extends Hardware {
     @Override
     public void runOpMode(){
         hardwareSetup();
-        selectParameters();
-        TensorflowDetector recognizer = new TensorflowDetector(10,20);
+        //selectParameters();
         waitForStart();
         sleep(delaySeconds * 100);
         // Move forward
@@ -35,7 +34,9 @@ public class Auto extends Hardware {
         } else if (startingPosition.equals("Warehouse")){
             idle();
         }
-        encoderDrive(0.7,10,-10,10,-10);
+        encoderDrive(0.4,10,-10,10,-10);
+        sleep(100);
+        encoderDrive(0.4,14.14,14.14,14.14,14.14);
         // Fake values for now. Just showing how to call it
 
         // Then move to the place.
