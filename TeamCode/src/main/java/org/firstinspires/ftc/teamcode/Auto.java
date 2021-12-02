@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.Range;
-
+@Autonomous(name = "Auto")
 public class Auto extends Hardware {
     public int delaySeconds = 0; //seconds to wait for alliance
     public String startingPosition = "Carousel";
@@ -13,16 +14,21 @@ public class Auto extends Hardware {
     @Override
     public void runOpMode(){
         hardwareSetup();
-        selectParameters();
+        //selectParameters();
+        //TensorflowDetector recognizer = new TensorflowDetector(10,20);
         waitForStart();
         telemetry.update();
-
+        encoderDrive(0.7,10,-10,10,-10);
         // Fake values for now. Just showing how to call it
-        TensorflowDetector recongnizer = new TensorflowDetector(10,20);
 
-        int place = recongnizer.recognizeObjects();
+        while(opModeIsActive()){
+           /// recognizer.listObjects();
+            sleep(20);
+        }
 
         // Then move to the place.
+        // front backwarsd to the righjt
+        //
 
     }
 

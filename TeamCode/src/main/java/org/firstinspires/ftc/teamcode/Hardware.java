@@ -17,7 +17,7 @@ public class Hardware extends LinearOpMode {
     protected Claw claw;
 
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1680 ;    // CHECK THIS
+    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // CHECK THIS
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference. Not sure what it is
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
@@ -120,10 +120,10 @@ public class Hardware extends LinearOpMode {
             newBLTarget = backLeft.getCurrentPosition()     +  (backLeftInches * COUNTS_PER_INCH);
             newBRTarget = backRight.getCurrentPosition()     + (backRightInches * COUNTS_PER_INCH);
 
-            backRight.setTargetPosition((int)(backRightInches));
-            frontRight.setTargetPosition((int)(frontRightInches));
-            frontLeft.setTargetPosition((int)(frontLeftInches));
-            backLeft.setTargetPosition((int)(backLeftInches));
+            backRight.setTargetPosition((int)(newBRTarget));
+            frontRight.setTargetPosition((int)(newFRTarget));
+            frontLeft.setTargetPosition((int)(newFLTarget));
+            backLeft.setTargetPosition((int)(newBLTarget));
 
             // Run to position
             frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -146,7 +146,7 @@ public class Hardware extends LinearOpMode {
             while (opModeIsActive() &&
                     (frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy() )) {
                     // Do nothing
-
+                    idle();
             }
             // Set Zero Power
             frontRight.setPower(0);
