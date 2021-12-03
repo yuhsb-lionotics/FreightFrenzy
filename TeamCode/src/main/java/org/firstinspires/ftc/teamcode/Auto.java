@@ -4,19 +4,16 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.Range;
 @Autonomous(name = "Auto")
 public class Auto extends Hardware {
+
     public int delaySeconds = 0; //seconds to wait for alliance
     public String startingPosition = "Carousel";
-
-    public int duckStartLocation = 1; //ilegal
-    public int drivers = 1; //number of drivers on team
-    public String carouselStatus = "Waiting for start"; // status of variable selector 'carousel'
 
     @Override
     public void runOpMode(){
         hardwareSetup();
-        //selectParameters();
+        selectParameters();
         waitForStart();
-        sleep(delaySeconds * 100);
+        sleep(delaySeconds * 100); //What is this for?
         // Move forward
         // Move to each place of the duck, checking the color sensor
         // claw to correct position
@@ -48,13 +45,13 @@ public class Auto extends Hardware {
         String currentParameter = "Delay";
         while (!gamepad1.a) { //pressing 'a' will end the selection
             telemetry.addLine("Select " + currentParameter);
-
+            telemetry.addLine("To end the selection press 'a'");
             switch (currentParameter) {
                 case "Delay":
                     if (gamepad1.dpad_up) {
                         delaySeconds++;
                     }
-                    if (gamepad1.dpad_down) {
+                    else if (gamepad1.dpad_down) {
                         delaySeconds--;
                     }
                     delaySeconds = Range.clip(delaySeconds, 0, 30);
