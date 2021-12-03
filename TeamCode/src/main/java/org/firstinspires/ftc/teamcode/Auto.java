@@ -7,23 +7,30 @@ public class Auto extends Hardware {
 
     public int delaySeconds = 0; //seconds to wait for alliance
     public String startingPosition = "Carousel";
-
+    public int iterator = 0;
+    public int duckPosition = 0;
+    public int drivers = 1; //number of drivers on team
+    public String carouselStatus = "Waiting for start"; // status of variable selector 'carousel'
     @Override
     public void runOpMode(){
         hardwareSetup();
-
-        selectParameters();
-        telemetry.addData("Status","Waiting for Start");
-        //Display all parameter values (so far delaySeconds and startingPosition)
-        telemetry.addData("delaySeconds: ", delaySeconds);
-        telemetry.addData("startingPosition: ", startingPosition);
-        telemetry.update();
-
-        //Delay the start of the program according to the specified setting
-        sleep(delaySeconds * 1000);
-
+//        //selectParameters();
+//        telemetry.addData("Status","Waiting for Start");
+//        //Display all parameter values (so far delaySeconds and startingPosition)
+//        telemetry.addData("delaySeconds: ", delaySeconds);
+//        telemetry.addData("startingPosition: ", startingPosition);
+//        telemetry.update();
+//
+//        //Delay the start of the program according to the specified setting
+//        sleep(delaySeconds * 1000);
+//        telemetry.addLine("Loading preload box. Press dpad up to close");
+//        telemetry.update();
+//        claw.setPosition(1);
+//        while(!gamepad1.dpad_up){
+//            idle();
+//        }
+        claw.setPosition(0.55);
         waitForStart();
-        telemetry.update();
         // Move forward
         // Move to each place of the duck, checking the color sensor
         // claw to correct position
@@ -41,14 +48,47 @@ public class Auto extends Hardware {
         } else if (startingPosition.equals("Warehouse")){
             idle();
         }
-        //encoderDrive(0.4,10,-10,10,-10);
-        sleep(100); //Why?
-        encoderDrive(0.4,14.14,14.14,14.14,14.14);
-        // Fake values for now. Just showing how to call it
 
+        encoderDrive(0.4,1,1,1,1, false);
+        encoderDrive(0.4,10,-10,10,-10, false);
+        encoderDrive(0.4,11,11,11,11, false);
+        claw.setPosition(0.55);
+        while(touchSensorRight.getValue() == 0){
+            encoderDrive(0.6,-3,3,-3,3, true);
+            sleep(100);
+            iterator++;
+            telemetry.addData("iterator", iterator);
+            telemetry.update();
+        }
+        if (iterator <= 2){
+            duckPosition = 0;
+            // LEFT -- Bottom
+        } else if (iterator >2 && iterator < 5){
+            duckPosition = 1;
+            // MIDDLE
+        } else if (iterator >=5){
+            duckPosition = 2;
+            // RIGHT -- top
+        }
+        telemetry.addData("DuckPosition",duckPosition);
+        telemetry.update();
+
+
+        // raise the arm
+        if (duckPosition == 0 ) {
+            raiseClawPos(800, 0.5);
+        } else if (duckPosition == 2){
+            raiseClawPos(2610, 0.6);
+        } else if (duckPosition == 1){
+            raiseClawPos(1800, 0.6);
+        }
+
+        int inchesToGo = iterator * 3 + 6;
+        // move to the goal
+        encoderDrive(0.6, inchesToGo, -inchesToGo, inchesToGo, -inchesToGo, false);
+        encoderDrive(0.6, 5,5,5,5,false);
+        claw.setPosition(0.8);
         // Then move to the place.
-
-
     }
 
     public void selectParameters() {
@@ -65,7 +105,6 @@ public class Auto extends Hardware {
                     }
                     delaySeconds = Range.clip(delaySeconds, 0, 30);
                     telemetry.addLine("delaySeconds = " + delaySeconds);
-
                     if (gamepad1.x) { // pressing 'x' sends selector to the next variable
                         currentParameter = "Starting Position";
                     }
@@ -79,11 +118,25 @@ public class Auto extends Hardware {
                         startingPosition = "Warehouse";
                     }
                     telemetry.addLine("startingPosition = " + startingPosition);
-
+                    telemetry.update();
                     if(gamepad1.x) {
+                        currentParameter = "Load";
+                    }
+                    break;
+                case "Load":
+                    telemetry.addLine("Loading preload box. Press dpad up to close");
+                    telemetry.update();
+                    claw.setPosition(1);
+                    while(!gamepad1.dpad_up){
+                        idle();
+                    }
+                    claw.setPosition(0.55);
+                    if (gamepad1.x){
                         currentParameter = "Delay";
                     }
                 break;
+
+
             }
 
             //Output to telemetry and sleep

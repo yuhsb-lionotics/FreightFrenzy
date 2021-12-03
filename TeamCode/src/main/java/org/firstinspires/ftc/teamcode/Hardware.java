@@ -109,7 +109,7 @@ public class Hardware extends LinearOpMode {
         backRight.setPower(rightPower + strafePower);
     }
     // Pinchas should make an encoder drive
-    public void encoderDrive(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
+    public void encoderDrive(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches, boolean stopOnPress){
         // stop and reset the encoders? Maybe not. Might want to get position and add from there
         double newFRTarget;
         double newFLTarget;
@@ -151,8 +151,21 @@ public class Hardware extends LinearOpMode {
 
             while (opModeIsActive() &&
                     (frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy() )) {
-                    // Do nothing
-                idle();
+                if (stopOnPress && (touchSensorLeft.isPressed() || touchSensorRight.isPressed())){
+                    frontRight.setPower(0);
+                    frontLeft.setPower(0);
+                    backRight.setPower(0);
+                    backLeft.setPower(0);
+
+                    frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    telemetry.addData("hit!", "hit!");
+                    telemetry.update();
+                    break;
+
+                }
             }
             // Set Zero Power
             frontRight.setPower(0);
@@ -174,10 +187,10 @@ public class Hardware extends LinearOpMode {
 
 
     }
+
     public void raiseClaw(double power){
         clawPulley.setPower(power);
     }
-
 
     public void encoderToSpecificPos(DcMotor motor, int pos , double power){
         motor.setTargetPosition(pos);
