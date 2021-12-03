@@ -11,9 +11,18 @@ public class Auto extends Hardware {
     @Override
     public void runOpMode(){
         hardwareSetup();
+
         selectParameters();
-        waitForStart();
+        telemetry.addData("Status","Waiting for Start");
+        //Display all parameter values (so far delaySeconds and startingPosition)
+        telemetry.addData("delaySeconds: ", delaySeconds);
+        telemetry.addData("startingPosition: ", startingPosition);
+        telemetry.update();
+
         sleep(delaySeconds * 100); //What is this for?
+
+        waitForStart();
+        telemetry.update();
         // Move forward
         // Move to each place of the duck, checking the color sensor
         // claw to correct position
@@ -32,7 +41,7 @@ public class Auto extends Hardware {
             idle();
         }
         //encoderDrive(0.4,10,-10,10,-10);
-        sleep(100);
+        sleep(100); //Why?
         encoderDrive(0.4,14.14,14.14,14.14,14.14);
         // Fake values for now. Just showing how to call it
 
@@ -50,16 +59,17 @@ public class Auto extends Hardware {
                 case "Delay":
                     if (gamepad1.dpad_up) {
                         delaySeconds++;
-                    }
-                    else if (gamepad1.dpad_down) {
+                    } else if (gamepad1.dpad_down) {
                         delaySeconds--;
                     }
                     delaySeconds = Range.clip(delaySeconds, 0, 30);
                     telemetry.addLine("delaySeconds = " + delaySeconds);
+
                     if (gamepad1.x) { // pressing 'x' sends selector to the next variable
                         currentParameter = "Starting Position";
                     }
-                    break;
+                break;
+
                 case "Starting Position":
                     //Choose between "Carousel" and "Warehouse"
                     if (gamepad1.dpad_up) {
@@ -68,11 +78,13 @@ public class Auto extends Hardware {
                         startingPosition = "Warehouse";
                     }
                     telemetry.addLine("startingPosition = " + startingPosition);
+
                     if(gamepad1.x) {
                         currentParameter = "Delay";
                     }
-                    break;
+                break;
             }
+
             //Output to telemetry and sleep
             telemetry.update();
             sleep(200);
