@@ -19,7 +19,8 @@ public class Auto extends Hardware {
         telemetry.addData("startingPosition: ", startingPosition);
         telemetry.update();
 
-        sleep(delaySeconds * 100); //What is this for?
+        //Delay the start of the program according to the specified setting
+        sleep(delaySeconds * 1000);
 
         waitForStart();
         telemetry.update();
