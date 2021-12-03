@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp")
@@ -7,6 +8,10 @@ public class TeleOp extends Hardware{
     @Override
     public void runOpMode() throws InterruptedException {
         hardwareSetup();
+        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         boolean clawOpened = true;
         int clawPos = 1;
         waitForStart();
@@ -51,9 +56,11 @@ public class TeleOp extends Hardware{
             } else if (gamepad1.x){
                 carousel.setPower(0.7);
             } else {
-                setCaroselPower(0);
+                setCarouselPower(0);
             }
             telemetry.addData("ClawPos",clawPos);
+            telemetry.addData("Left sensor", touchSensorLeft.getValue());
+            telemetry.addData("Right sensor", touchSensorRight.getValue());
             telemetry.update();
 
 

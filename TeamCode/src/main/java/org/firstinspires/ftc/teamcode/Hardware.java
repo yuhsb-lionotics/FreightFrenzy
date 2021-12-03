@@ -46,8 +46,9 @@ public class Hardware extends LinearOpMode {
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotor.Direction.REVERSE); //No idea why this is different than backRight. The wheel was just moving backwards
+        frontRight.setDirection(DcMotor.Direction.FORWARD); //No idea why this is different than backRight. The wheel was just moving backwards
         backRight.setDirection(DcMotor.Direction.FORWARD);
+
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -85,12 +86,6 @@ public class Hardware extends LinearOpMode {
         backLeft.setPower(forwardLeftPower);
         frontRight.setPower(forwardLeftPower);
         backRight.setPower(forwardRightPower);
-    }
-    public boolean getLeftSensor(){
-        return touchSensorLeft.isPressed();
-    }
-    public boolean getRightSensor(){
-        return touchSensorRight.isPressed();
     }
     public void driveForward(final double power) {
         strafe(power, power);
@@ -197,7 +192,7 @@ public class Hardware extends LinearOpMode {
     public void raiseClawPos(int pos, double power){
         encoderToSpecificPos(clawPulley, pos, power);
     }
-    public void setCaroselPower(double power){
+    public void setCarouselPower(double power){
         carousel.setPower(power);
     }
     // Last thing is an empty runOpMode because it's a linearopmode

@@ -34,7 +34,7 @@ public class Auto extends Hardware {
         } else if (startingPosition.equals("Warehouse")){
             idle();
         }
-        encoderDrive(0.4,10,-10,10,-10);
+        //encoderDrive(0.4,10,-10,10,-10);
         sleep(100);
         encoderDrive(0.4,14.14,14.14,14.14,14.14);
         // Fake values for now. Just showing how to call it
