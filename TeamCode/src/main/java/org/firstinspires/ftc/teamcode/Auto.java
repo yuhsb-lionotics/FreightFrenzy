@@ -29,6 +29,7 @@ public class Auto extends Hardware {
 //        while(!gamepad1.dpad_up){
 //            idle();
 //        }
+
         claw.setPosition(0.55);
         waitForStart();
         // Move forward
@@ -49,17 +50,15 @@ public class Auto extends Hardware {
             idle();
         }
 
-        encoderDrive(0.4,1,1,1,1, false);
-        encoderDrive(0.4,10,-10,10,-10, false);
-        encoderDrive(0.4,11,11,11,11, false);
+        encoderDrive(0.4,1,1,1,1);
+        encoderDrive(0.4,10,-10,10,-10);
+        encoderDrive(0.4,11,11,11,11);
         claw.setPosition(0.55);
-        while(touchSensorRight.getValue() == 0){
-            encoderDrive(0.6,-3,3,-3,3, true);
-            sleep(100);
-            iterator++;
-            telemetry.addData("iterator", iterator);
-            telemetry.update();
-        }
+        iterator = encoderUntilHit(0.6,-3,3,-3,3);
+        sleep(100);
+        telemetry.addData("iterator", iterator);
+        telemetry.update();
+        // NEEDS UPDATE FOR NEW FUNCTION
         if (iterator <= 2){
             duckPosition = 0;
             // LEFT -- Bottom
@@ -76,7 +75,7 @@ public class Auto extends Hardware {
 
         // raise the arm
         if (duckPosition == 0 ) {
-            raiseClawPos(800, 0.5);
+            raiseClawPos(800, 0.6);
         } else if (duckPosition == 2){
             raiseClawPos(2610, 0.6);
         } else if (duckPosition == 1){
@@ -85,10 +84,10 @@ public class Auto extends Hardware {
 
         int inchesToGo = iterator * 3 + 6;
         // move to the goal
-        encoderDrive(0.6, inchesToGo, -inchesToGo, inchesToGo, -inchesToGo, false);
-        encoderDrive(0.6, 5,5,5,5,false);
-        claw.setPosition(0.8);
-        // Then move to the place.
+        encoderDrive(0.6, inchesToGo, -inchesToGo, inchesToGo, -inchesToGo);
+        encoderDrive(0.6, 5,5,5,5);
+        // Open claw.
+        claw.setPosition(0.9);
     }
 
     public void selectParameters() {
