@@ -45,8 +45,11 @@ public class TeleOp extends Hardware{
                 }
 
                 if (gamepad2.x) {
-                    carousel.setPower(0.7);
-                } else {
+                    carousel.setPower(0.9);
+                } else if (gamepad2.y){
+                    carousel.setPower(-0.9);
+                }
+                else{
                     setCarouselPower(0);
                 }
                 telemetry.addData("ClawPos", clawPos);
