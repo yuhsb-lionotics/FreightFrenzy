@@ -29,6 +29,7 @@ public class TeleOp extends Hardware{
                     claw.setPosition(0.9);
                     clawOpen = true;
                 }
+            }
 
                 //Control clawPulley
                 if (gamepad2.dpad_up) {
@@ -59,7 +60,7 @@ public class TeleOp extends Hardware{
 
             }
         }
-    }
+
     public void tankControl(double maxPower) /* 0 < maxPower <= 1 */ {
         double leftPower = -gamepad1.left_stick_y * maxPower;
         double rightPower = -gamepad1.right_stick_y * maxPower;
