@@ -116,6 +116,10 @@ public class Hardware extends LinearOpMode {
 
         if (opModeIsActive()){
             //calculate and set target positions
+            frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             newFRTarget = frontRight.getCurrentPosition()     +  (frontRightInches * COUNTS_PER_INCH);
             newFLTarget = frontLeft.getCurrentPosition()     +  (frontLeftInches * COUNTS_PER_INCH);
@@ -132,7 +136,6 @@ public class Hardware extends LinearOpMode {
             frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
 
 
 
@@ -159,8 +162,6 @@ public class Hardware extends LinearOpMode {
                     frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    telemetry.addData("hit!", "hit!");
-                    telemetry.update();
                     return (int) (newBRTarget - frontLeft.getCurrentPosition());
 
                 }

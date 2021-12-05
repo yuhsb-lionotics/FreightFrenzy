@@ -9,10 +9,12 @@ public class Auto extends Hardware {
     public String startingPosition = "Carousel";
     public int iterator = 0;
     public int duckPosition = 0;
+    double inchesToGo;
     public int drivers = 1; //number of drivers on team
     public String carouselStatus = "Waiting for start"; // status of variable selector 'carousel'
+
     @Override
-    public void runOpMode(){
+    public void runOpMode() {
         hardwareSetup();
 //        //selectParameters();
 //        telemetry.addData("Status","Waiting for Start");
@@ -44,51 +46,64 @@ public class Auto extends Hardware {
         // Move to final place for points
 
         // Place in the correct location
-        if(startingPosition.equals("Carousel")){
-           idle();
-        } else if (startingPosition.equals("Warehouse")){
+        if (startingPosition.equals("Carousel")) {
+            idle();
+        } else if (startingPosition.equals("Warehouse")) {
             idle();
         }
 
-        encoderDrive(0.4,1,1,1,1);
-        encoderDrive(0.4,10,-10,10,-10);
-        encoderDrive(0.4,11,11,11,11);
-        claw.setPosition(0.55);
-        iterator = encoderUntilHit(0.6,-3,3,-3,3);
-        sleep(100);
-        telemetry.addData("iterator", iterator);
-        telemetry.update();
+        encoderDrive(0.4, 1, 1, 1, 1);
+        encoderDrive(0.4, 10.5, -10.5, 10.5, -10.5);
+        encoderDrive(0.4, 10.5, 10.5, 10.5, 10.5);
+        int preHitPos = frontRight.getCurrentPosition();
+        iterator = encoderUntilHit(0.5, -20, 20, -20, 20);
+        if(iterator != 0) {
+            iterator = preHitPos - iterator;
+        }
+
+
         // NEEDS UPDATE FOR NEW FUNCTION
-        if (iterator <= 2){
+        if (iterator <= 700){
             duckPosition = 0;
             // LEFT -- Bottom
-        } else if (iterator >2 && iterator < 5){
+        } else if (iterator < 1200){
             duckPosition = 1;
             // MIDDLE
-        } else if (iterator >=5){
+        } else if (iterator > 1200 || iterator == 0){
             duckPosition = 2;
             // RIGHT -- top
         }
+        telemetry.addData("iterator", iterator);
         telemetry.addData("DuckPosition",duckPosition);
         telemetry.update();
+        sleep(2000);
 
+
+        raiseClawPos(800, 0.6);
+        if (iterator != 0) {
+            inchesToGo = (iterator / COUNTS_PER_INCH) + 6;
+        } else{
+            inchesToGo = 25;
+        }
+
+        // move to the goal
+        encoderDrive(0.6, inchesToGo, -inchesToGo, inchesToGo, -inchesToGo);
 
         // raise the arm
         if (duckPosition == 0 ) {
             raiseClawPos(800, 0.6);
-        } else if (duckPosition == 2){
-            raiseClawPos(2610, 0.6);
         } else if (duckPosition == 1){
             raiseClawPos(1800, 0.6);
+        } else if (duckPosition == 2) {
+            raiseClawPos(2610, 0.6);
         }
 
-        int inchesToGo = iterator * 3 + 6;
-        // move to the goal
-        encoderDrive(0.6, inchesToGo, -inchesToGo, inchesToGo, -inchesToGo);
-        encoderDrive(0.6, 5,5,5,5);
+
+
+        encoderDrive(0.6, 6,6,6,6);
         // Open claw.
         claw.setPosition(0.9);
-    }
+   }
 
     public void selectParameters() {
         String currentParameter = "Delay";
