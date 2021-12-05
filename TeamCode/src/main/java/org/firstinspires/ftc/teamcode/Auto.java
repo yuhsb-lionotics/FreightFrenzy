@@ -55,55 +55,61 @@ public class Auto extends Hardware {
         encoderDrive(0.4, 1, 1, 1, 1);
         encoderDrive(0.4, 10.5, -10.5, 10.5, -10.5);
         encoderDrive(0.4, 10.5, 10.5, 10.5, 10.5);
-        int preHitPos = frontRight.getCurrentPosition();
-        iterator = encoderUntilHit(0.5, -20, 20, -20, 20);
-        if(iterator != 0) {
-            iterator = preHitPos - iterator;
-        }
+//        int preHitPos = frontRight.getCurrentPosition();
+//        iterator = encoderUntilHit(0.5, -20, 20, -20, 20);
+//        if(iterator != 0) {
+//            iterator = preHitPos - iterator;
+//        }
+//
+//
+//        // NEEDS UPDATE FOR NEW FUNCTION
+//        if (iterator <= 700){
+//            duckPosition = 0;
+//            // LEFT -- Bottom
+//        } else if (iterator < 1200){
+//            duckPosition = 1;
+//            // MIDDLE
+//        } else if (iterator > 1200 || iterator == 0){
+//            duckPosition = 2;
+//            // RIGHT -- top
+//        }
+//        telemetry.addData("iterator", iterator);
+//        telemetry.addData("DuckPosition",duckPosition);
+//        telemetry.update();
+//        sleep(2000);
+//
+//
+//        raiseClawPos(800, 0.6);
+//        if (iterator != 0) {
+//            inchesToGo = (iterator / COUNTS_PER_INCH) + 6;
+//        } else{
+//            inchesToGo = 25;
+//        }
 
-
-        // NEEDS UPDATE FOR NEW FUNCTION
-        if (iterator <= 700){
-            duckPosition = 0;
-            // LEFT -- Bottom
-        } else if (iterator < 1200){
-            duckPosition = 1;
-            // MIDDLE
-        } else if (iterator > 1200 || iterator == 0){
-            duckPosition = 2;
-            // RIGHT -- top
-        }
-        telemetry.addData("iterator", iterator);
-        telemetry.addData("DuckPosition",duckPosition);
-        telemetry.update();
-        sleep(2000);
-
-
-        raiseClawPos(800, 0.6);
-        if (iterator != 0) {
-            inchesToGo = (iterator / COUNTS_PER_INCH) + 6;
-        } else{
-            inchesToGo = 25;
-        }
-
+        inchesToGo = 6;
         // move to the goal
         encoderDrive(0.6, inchesToGo, -inchesToGo, inchesToGo, -inchesToGo);
 
         // raise the arm
-        if (duckPosition == 0 ) {
-            raiseClawPos(800, 0.6);
-        } else if (duckPosition == 1){
-            raiseClawPos(1800, 0.6);
-        } else if (duckPosition == 2) {
-            raiseClawPos(2610, 0.6);
-        }
+//        if (duckPosition == 0 ) {
+//            raiseClawPos(800, 0.6);
+//        } else if (duckPosition == 1){
+//            raiseClawPos(1800, 0.6);
+//        } else if (duckPosition == 2) {
+//            raiseClawPos(2610, 0.6);
+//        }
 
-
-
+        raiseClawPos(2600,0.6);
         encoderDrive(0.6, 6,6,6,6);
         // Open claw.
         claw.setPosition(0.9);
-   }
+        encoderDrive(0.6, -6,-6,-6,-6);
+        encoderDrive(0.6, -10.5,-10.5,-10.5,-10.5);
+
+
+
+
+    }
 
     public void selectParameters() {
         String currentParameter = "Delay";
