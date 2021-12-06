@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.Range;
 @Autonomous(name = "Auto")
+@Disabled
 public class Auto extends Hardware {
 
     public int delaySeconds = 0; //seconds to wait for alliance

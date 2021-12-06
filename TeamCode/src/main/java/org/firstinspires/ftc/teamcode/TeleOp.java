@@ -15,32 +15,32 @@ public class TeleOp extends Hardware{
         boolean clawOpened = true;
         int clawPos = 1;
         waitForStart();
-        claw.setPosition(clawPos);
+        //claw.setPosition(clawPos);
         boolean clawOpen = true;
         while (opModeIsActive()) {
             tankControl(0.6); //CHANGE THIS
 
             //control claw fingers
+            //a for close, b for open
             if (gamepad2.a) {
-                if (clawOpen) {
-                    claw.setPosition(0.55);
-                    clawOpen = false;
-                } else {
-                    claw.setPosition(0.9);
-                    clawOpen = true;
-                }
+                //close claw
+                claw.setPosition(0.55);
+            } else if (gamepad2.b) {
+                //open claw
+                claw.setPosition(0.9);
             }
 
                 //Control clawPulley
                 if (gamepad2.dpad_up) {
                     raiseClaw(0.5);
+                    sleep(50);
                 } else if (gamepad2.dpad_down) {
                     raiseClaw(-0.5);
-                } else if (gamepad2.dpad_left) {
+                } /* else if (gamepad2.dpad_left) {
                     raiseClawPos(2590, 0.5);
                 } else if (gamepad2.dpad_right) {
                     raiseClawPos(0, 0.5);
-                } else {
+                } */ else {
                     raiseClaw(0);
                 }
 

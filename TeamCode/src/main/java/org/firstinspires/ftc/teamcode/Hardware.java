@@ -55,6 +55,7 @@ public class Hardware extends LinearOpMode {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         carousel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        clawPulley.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
