@@ -6,12 +6,16 @@ import android.content.Context;
 
 public class Duck
 {
-    AssetFileDescriptor afd = Context.getAssets().openFd("duckSound.wav");
-    MediaPlayer player = new MediaPlayer();
+    public Duck(Context context){
+        AssetFileDescriptor afd = context.getAssets().openFd("../");
 
-    player.afd = afd;
+        MediaPlayer player = new MediaPlayer();
 
-    public void playDuck(){
-        player.start();
+        player.afd = afd;
+
+        public void playDuck(){
+            player.start();
+        }
     }
-}
+    }
+
