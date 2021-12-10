@@ -9,7 +9,8 @@ public class Button {
         this.previouslyPressed = firstValue;
     }
 
-    //Should be called repeatedly using the while loop in TeleOp
+    // Should be called once right before the while loop in TeleOp
+    // and at the beginning of the loop
     public void update(boolean nextValue) {
         previouslyPressed = currentlyPressed;
         currentlyPressed = nextValue;
