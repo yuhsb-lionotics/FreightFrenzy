@@ -46,6 +46,16 @@ public class AutoOpenCv extends Hardware {
             sleep(50);
             telemetry.addData("Location", pipeline.getLocation());
             telemetry.update();
+            // Close camera and pipeline
+//            phoneCam.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener()
+//            {
+//                @Override
+//                public void onClose()
+//                {
+//                    phoneCam.stopStreaming();
+//                }
+//
+//            });
         }
 
     }

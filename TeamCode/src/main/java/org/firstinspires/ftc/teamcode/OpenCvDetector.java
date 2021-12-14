@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.util.Log;
-
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -35,19 +33,14 @@ public class OpenCvDetector extends OpenCvPipeline {
     private static final int BOTTOM_BOUND = 200;
 
 
-
-
-
     @Override
     public Mat processFrame(Mat input) {
         // "Mat" stands for matrix, which is basically the image that the detector will process
         // the input matrix is the image coming from the camera
         // the function will return a matrix to be drawn on your phone's screen
 
-        // The detector detects regular stones. The camera fits two stones.
-        // If it finds one regular stone then the other must be the skystone.
         // If both are regular stones, it returns NONE to tell the robot to keep looking
-        Log.w("OpenCv Pipeline","Starting frame proccessing.");
+//        Log.w("OpenCv Pipeline","Starting frame proccessing.");
         // Make a working copy of the input matrix in HSV
         Mat mat = new Mat();
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
@@ -61,9 +54,9 @@ public class OpenCvDetector extends OpenCvPipeline {
         // We create a HSV range for yellow to detect regular stones
         // NOTE: In OpenCV's implementation,
         // Hue values are half the real value
+        // Use an HSV color picker for a different color.
         Scalar lowHSV = new Scalar(20, 100, 100); // lower bound HSV for yellow
         Scalar highHSV = new Scalar(30, 255, 255); // higher bound HSV for yellow
-        // Use an HSV color picker for a different color.
 
         Mat thresh = new Mat();
         // Find things in our yellow range and put them in thresh
@@ -91,6 +84,7 @@ public class OpenCvDetector extends OpenCvPipeline {
             //Log.i("Item Location", String.valueOf(boundRect[i]));
             // The frame is 320 wide. For now just splitting it into three.
             // Also only accepting from the middle part of the frame, to help filter out other yellow things
+            // TODO: Switch to submat for what to look in.
             // TODO: Tune the boundaries for the different places, and also where within the frame to not look
 
             if (boundRect[i].x < 106 && boundRect[i].y > TOP_BOUND && boundRect[i].y < BOTTOM_BOUND){
