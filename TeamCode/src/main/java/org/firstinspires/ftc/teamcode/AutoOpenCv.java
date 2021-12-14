@@ -9,7 +9,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 @Autonomous(name = "AutoCameraTesting")
-public class Auto extends Hardware {
+public class AutoOpenCv extends Hardware {
     OpenCvInternalCamera phoneCam;
 
 
