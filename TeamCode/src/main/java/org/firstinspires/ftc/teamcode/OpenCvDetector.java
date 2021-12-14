@@ -30,6 +30,12 @@ public class OpenCvDetector extends OpenCvPipeline {
 
     private int width = 1280; // width of the image
     ElementLocation location;
+    // Places within the frame to not care about colored objects
+    private static final int TOP_BOUND = 40;
+    private static final int BOTTOM_BOUND = 200;
+
+
+
 
 
     @Override
@@ -46,23 +52,20 @@ public class OpenCvDetector extends OpenCvPipeline {
         Mat mat = new Mat();
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
-//        // if something is wrong, we assume there's no skystone
-//        if (mat.empty()) {
-//            location = ElementLocation.NONE;
-//            return input;
-//        }
+        // if something is wrong, we assume Right since that's most points
+        if (mat.empty()) {
+            location = ElementLocation.RIGHT;
+            return input;
+        }
 
         // We create a HSV range for yellow to detect regular stones
         // NOTE: In OpenCV's implementation,
         // Hue values are half the real value
         Scalar lowHSV = new Scalar(20, 100, 100); // lower bound HSV for yellow
         Scalar highHSV = new Scalar(30, 255, 255); // higher bound HSV for yellow
+        // Use an HSV color picker for a different color.
 
         Mat thresh = new Mat();
-        // Declare where the three points you are looking at are
-        Point LEFT_POINT = new Point(50,98);
-        Point MIDDLE_POINT = new Point(100,98);
-        Point RIGHT_POINT = new Point(150,98);
         // Find things in our yellow range and put them in thresh
         Core.inRange(mat, lowHSV, highHSV, thresh);
         // Use canny edge detection to find edges of threshold objects
@@ -84,11 +87,29 @@ public class OpenCvDetector extends OpenCvPipeline {
             // draw red bounding rectangles on mat
             // the mat has been converted to HSV so we need to use HSV as well
             Imgproc.rectangle(mat, boundRect[i], new Scalar(0.5, 76.9, 89.8),3);
-            Log.i("Item Location", String.valueOf(boundRect[i]));
+
+            //Log.i("Item Location", String.valueOf(boundRect[i]));
+            // The frame is 320 wide. For now just splitting it into three.
+            // Also only accepting from the middle part of the frame, to help filter out other yellow things
+            // TODO: Tune the boundaries for the different places, and also where within the frame to not look
+
+            if (boundRect[i].x < 106 && boundRect[i].y > TOP_BOUND && boundRect[i].y < BOTTOM_BOUND){
+                location = ElementLocation.LEFT;
+            } else if (boundRect[i].x < 212 && boundRect[i].y > TOP_BOUND && boundRect[i].y < BOTTOM_BOUND){
+                location = ElementLocation.MIDDLE;
+            } else if (boundRect[i].x > 212 && boundRect[i].y > TOP_BOUND && boundRect[i].y < BOTTOM_BOUND) {
+                location = ElementLocation.RIGHT;
+            }
+
         }
+        // Draw on bounds to be helpful
+
+        Imgproc.rectangle(mat, new Point(0,0), new Point(320,TOP_BOUND), new Scalar(0.5, 76.9, 89.8), -1 );
+        Imgproc.rectangle(mat, new Point(0,240), new Point(320,BOTTOM_BOUND), new Scalar(0.5, 76.9, 89.8), -1 );
 
 
-        Log.w("OpenCv Pipeline","Returning");
+
+
         Mat output = new Mat();
         Imgproc.cvtColor(mat, output, Imgproc.COLOR_HSV2RGB);
         return output;

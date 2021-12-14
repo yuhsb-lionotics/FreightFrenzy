@@ -11,6 +11,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 @Autonomous(name = "AutoCameraTesting")
 public class AutoOpenCv extends Hardware {
     OpenCvInternalCamera phoneCam;
+    OpenCvDetector pipeline = new OpenCvDetector();
 
 
 
@@ -20,7 +21,7 @@ public class AutoOpenCv extends Hardware {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
 
-        phoneCam.setPipeline(new OpenCvDetector());
+        phoneCam.setPipeline(pipeline);
         phoneCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
         phoneCam.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
         phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -43,7 +44,10 @@ public class AutoOpenCv extends Hardware {
         {
             // Don't burn CPU cycles busy-looping in this sample
             sleep(50);
+            telemetry.addData("Location", pipeline.getLocation());
+            telemetry.update();
         }
+
     }
 
 
