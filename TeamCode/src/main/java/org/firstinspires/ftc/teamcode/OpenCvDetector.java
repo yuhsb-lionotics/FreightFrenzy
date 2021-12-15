@@ -17,8 +17,6 @@ import java.util.List;
 // Thank you Team Wolf Corp (#12525)
 public class OpenCvDetector extends OpenCvPipeline {
 
-    static final int REGION_WIDTH = 35;
-    static final int REGION_HEIGHT = 25;
 
     enum ElementLocation {
         LEFT,
@@ -26,7 +24,6 @@ public class OpenCvDetector extends OpenCvPipeline {
         MIDDLE
     }
 
-    //private int width = 1280; // width of the image
     ElementLocation location;
     // Places within the frame to not care about colored objects
     private static final int TOP_BOUND = 40;

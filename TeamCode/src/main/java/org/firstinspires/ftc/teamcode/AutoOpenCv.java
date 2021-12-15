@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.openftc.easyopencv.OpenCvCamera;
@@ -17,7 +15,6 @@ public class AutoOpenCv extends Hardware {
 
     @Override
     public void runOpMode(){
-        Log.w("AutoOpMode", "Running opmode! :-)");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
 
