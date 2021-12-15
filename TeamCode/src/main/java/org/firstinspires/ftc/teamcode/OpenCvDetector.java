@@ -26,7 +26,7 @@ public class OpenCvDetector extends OpenCvPipeline {
         MIDDLE
     }
 
-    private int width = 1280; // width of the image
+    //private int width = 1280; // width of the image
     ElementLocation location;
     // Places within the frame to not care about colored objects
     private static final int TOP_BOUND = 40;
@@ -39,27 +39,26 @@ public class OpenCvDetector extends OpenCvPipeline {
         // the input matrix is the image coming from the camera
         // the function will return a matrix to be drawn on your phone's screen
 
-        // If both are regular stones, it returns NONE to tell the robot to keep looking
 //        Log.w("OpenCv Pipeline","Starting frame proccessing.");
         // Make a working copy of the input matrix in HSV
         Mat mat = new Mat();
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
-        // if something is wrong, we assume Right since that's most points
+        // if something is wrong, we assume since that's the easiest to get to.
         if (mat.empty()) {
-            location = ElementLocation.RIGHT;
+            location = ElementLocation.LEFT;
             return input;
         }
 
-        // We create a HSV range for yellow to detect regular stones
-        // NOTE: In OpenCV's implementation,
-        // Hue values are half the real value
+        // We create a HSV range for yellow to detect ducks / TSE
+        // NOTE: In OpenCV's implementation, Hue values are half the real value
         // Use an HSV color picker for a different color.
         Scalar lowHSV = new Scalar(20, 100, 100); // lower bound HSV for yellow
         Scalar highHSV = new Scalar(30, 255, 255); // higher bound HSV for yellow
 
-        Mat thresh = new Mat();
+
         // Find things in our yellow range and put them in thresh
+        Mat thresh = new Mat();
         Core.inRange(mat, lowHSV, highHSV, thresh);
         // Use canny edge detection to find edges of threshold objects
         Mat edges = new Mat();
@@ -103,7 +102,7 @@ public class OpenCvDetector extends OpenCvPipeline {
 
 
 
-
+        // Convert back to RGB for the camera frame
         Mat output = new Mat();
         Imgproc.cvtColor(mat, output, Imgproc.COLOR_HSV2RGB);
         return output;

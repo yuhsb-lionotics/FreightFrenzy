@@ -2,13 +2,6 @@ name: Android CI
 
 on:
   push:
-    branches:
-     - master
-     - littleRobot
-     - bigRobot
-     - opencv
-  pull_request:
-    branches: [ master ]
 
 jobs:
   build:
