@@ -24,8 +24,7 @@ public class testencoders  extends LinearOpMode {
         rightClawFinger = hardwareMap.servo.get("clawR");
         claw = new Claw(leftClawFinger,rightClawFinger);
         carousel = hardwareMap.dcMotor.get("carousel");
-        touchSensorLeft = hardwareMap.touchSensor.get("touchSensorLeft");
-        touchSensorRight = hardwareMap.touchSensor.get("touchSensorRight");
+
 
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);

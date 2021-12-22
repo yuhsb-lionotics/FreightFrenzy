@@ -54,8 +54,6 @@ public class TeleOp extends Hardware{
                 }
                 telemetry.addData("ClawPos", clawPos);
                 telemetry.addData("clawPulley", clawPulley.getCurrentPosition());
-                telemetry.addData("Left sensor", touchSensorLeft.getValue());
-                telemetry.addData("Right sensor", touchSensorRight.getValue());
                 telemetry.update();
 
 

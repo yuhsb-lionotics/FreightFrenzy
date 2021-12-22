@@ -26,8 +26,8 @@ public class OpenCvDetector extends OpenCvPipeline {
 
     ElementLocation location;
     // Places within the frame to not care about colored objects
-    private static final int TOP_BOUND = 40;
-    private static final int BOTTOM_BOUND = 200;
+    private static final int TOP_EXCLUDE = 40;
+    private static final int BOTTOM_EXCLUDE = 200;
     public final int LEFT_BOUND = 106;
     public final int RIGHT_BOUND = 212;
 
@@ -48,6 +48,7 @@ public class OpenCvDetector extends OpenCvPipeline {
             return input;
         }
 
+
         // We create a HSV range for yellow to detect ducks / TSE
         // NOTE: In OpenCV's implementation, Hue values are half the real value
         // Use an HSV color picker for a different color.
@@ -55,9 +56,14 @@ public class OpenCvDetector extends OpenCvPipeline {
         Scalar highHSV = new Scalar(30, 255, 255); // higher bound HSV for yellow
 
 
+        // Narrow down the image to the part where we are actually looking for stuff.
+        // Right now just limiting vertical space. We can also do horizontal space though.
+        // This gets tuned!
+        Mat portion = mat.submat(TOP_EXCLUDE, BOTTOM_EXCLUDE,0,320);
+
         // Find things in our yellow range and put them in thresh
         Mat thresh = new Mat();
-        Core.inRange(mat, lowHSV, highHSV, thresh);
+        Core.inRange(portion, lowHSV, highHSV, thresh);
         // Use canny edge detection to find edges of threshold objects
         Mat edges = new Mat();
         Imgproc.Canny(thresh, edges, 100, 300);
@@ -81,22 +87,21 @@ public class OpenCvDetector extends OpenCvPipeline {
             //Log.i("Item Location", String.valueOf(boundRect[i]));
             // The frame is 320 wide. For now just splitting it into three.
             // Also only accepting from the middle part of the frame, to help filter out other yellow things
-            // TODO: Switch to submat for what to look in.
             // TODO: Tune the boundaries for the different places, and also where within the frame to not look
 
-            if (boundRect[i].x < LEFT_BOUND && boundRect[i].y > TOP_BOUND && boundRect[i].y < BOTTOM_BOUND){
+            if (boundRect[i].x < LEFT_BOUND){
                 location = ElementLocation.LEFT;
-            } else if (boundRect[i].x < RIGHT_BOUND && boundRect[i].y > TOP_BOUND && boundRect[i].y < BOTTOM_BOUND){
+            } else if (boundRect[i].x < RIGHT_BOUND){
                 location = ElementLocation.MIDDLE;
-            } else if (boundRect[i].x > RIGHT_BOUND && boundRect[i].y > TOP_BOUND && boundRect[i].y < BOTTOM_BOUND) {
+            } else if (boundRect[i].x > RIGHT_BOUND) {
                 location = ElementLocation.RIGHT;
             }
 
         }
         // Draw on bounds to be helpful
 
-        Imgproc.rectangle(mat, new Point(0,0), new Point(320,TOP_BOUND), new Scalar(0.5, 76.9, 89.8), -1 );
-        Imgproc.rectangle(mat, new Point(0,240), new Point(320,BOTTOM_BOUND), new Scalar(0.5, 76.9, 89.8), -1 );
+        Imgproc.rectangle(mat, new Point(0,0), new Point(320, TOP_EXCLUDE), new Scalar(0.5, 76.9, 89.8), -1 );
+        Imgproc.rectangle(mat, new Point(0,240), new Point(320, BOTTOM_EXCLUDE), new Scalar(0.5, 76.9, 89.8), -1 );
         Imgproc.line     (mat, new Point(LEFT_BOUND, 0),new Point(LEFT_BOUND, 240), new Scalar(0,0,0), 2 );
         Imgproc.line     (mat, new Point(RIGHT_BOUND, 0),new Point(RIGHT_BOUND, 240), new Scalar(0,0,0), 2 );
 
