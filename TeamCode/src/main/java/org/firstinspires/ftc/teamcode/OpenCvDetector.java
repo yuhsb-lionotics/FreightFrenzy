@@ -100,10 +100,10 @@ public class OpenCvDetector extends OpenCvPipeline {
         }
         // Draw on bounds to be helpful
 
-        Imgproc.rectangle(mat, new Point(0,0), new Point(320, TOP_EXCLUDE), new Scalar(0.5, 76.9, 89.8), -1 );
-        Imgproc.rectangle(mat, new Point(0,240), new Point(320, BOTTOM_EXCLUDE), new Scalar(0.5, 76.9, 89.8), -1 );
-        Imgproc.line     (mat, new Point(LEFT_BOUND, 0),new Point(LEFT_BOUND, 240), new Scalar(0,0,0), 2 );
-        Imgproc.line     (mat, new Point(RIGHT_BOUND, 0),new Point(RIGHT_BOUND, 240), new Scalar(0,0,0), 2 );
+        Imgproc.rectangle(mat, new Point(0,0), new Point(320, TOP_EXCLUDE), new Scalar(0.5, 76.9, 89.8), -1);
+        Imgproc.rectangle(mat, new Point(0,240), new Point(320, BOTTOM_EXCLUDE), new Scalar(0.5, 76.9, 89.8), -1);
+        Imgproc.line(mat, new Point(LEFT_BOUND, 0), new Point(LEFT_BOUND, 240), new Scalar(0.5, 76.9, 89.8), 2 );
+        Imgproc.line(mat, new Point(RIGHT_BOUND, 0), new Point(RIGHT_BOUND, 240), new Scalar(0.5, 76.9, 89.8), 2 );
 
 
         // Convert back to RGB for the camera frame

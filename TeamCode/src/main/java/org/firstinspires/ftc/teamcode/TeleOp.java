@@ -12,13 +12,10 @@ public class TeleOp extends Hardware{
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        boolean clawOpened = true;
         int clawPos = 1;
         waitForStart();
-        //claw.setPosition(clawPos);
-        boolean clawOpen = true;
         while (opModeIsActive()) {
-            tankControl(0.6); //CHANGE THIS
+            tankControl(0.8); //CHANGE THIS
 
             //control claw fingers
             //a for close, b for open
@@ -27,38 +24,33 @@ public class TeleOp extends Hardware{
                 claw.setPosition(0.55);
             } else if (gamepad2.b) {
                 //open claw
-                claw.setPosition(0.9);
+                claw.setPosition(0.8);
+            }
+            //Control clawPulley
+            if (gamepad2.dpad_up) {
+                raiseClaw(0.5);
+                sleep(50);
+            } else if (gamepad2.dpad_down) {
+                raiseClaw(-0.5);
+            } /* else if (gamepad2.dpad_left) {
+                raiseClawPos(2590, 0.5);
+            } else if (gamepad2.dpad_right) {
+                raiseClawPos(0, 0.5);
+            } */ else {
+                raiseClaw(0);
             }
 
-                //Control clawPulley
-                if (gamepad2.dpad_up) {
-                    raiseClaw(0.5);
-                    sleep(50);
-                } else if (gamepad2.dpad_down) {
-                    raiseClaw(-0.5);
-                } /* else if (gamepad2.dpad_left) {
-                    raiseClawPos(2590, 0.5);
-                } else if (gamepad2.dpad_right) {
-                    raiseClawPos(0, 0.5);
-                } */ else {
-                    raiseClaw(0);
-                }
-
-                if (gamepad2.x) {
-                    carousel.setPower(0.9);
-                } else if (gamepad2.y){
-                    carousel.setPower(-0.9);
-                }
-                else{
-                    setCarouselPower(0);
-                }
-                telemetry.addData("ClawPos", clawPos);
-                telemetry.addData("clawPulley", clawPulley.getCurrentPosition());
-                telemetry.update();
-
-
-                // Top should be 2545
-
+            if (gamepad2.x) {
+                carousel.setPower(0.9);
+            } else if (gamepad2.y){
+                carousel.setPower(-0.9);
+            }
+            else{
+                setCarouselPower(0);
+            }
+            telemetry.addData("ClawPos", clawPos);
+            telemetry.addData("clawPulley", clawPulley.getCurrentPosition());
+            telemetry.update();
             }
         }
 

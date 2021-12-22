@@ -108,6 +108,7 @@ public class Hardware extends LinearOpMode {
         frontRight.setPower(rightPower - strafePower);
         backRight.setPower(rightPower + strafePower);
     }
+
     public int encoderUntilHit(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches, TouchSensor touchSensor){
         double newFRTarget;
         double newFLTarget;
@@ -137,8 +138,6 @@ public class Hardware extends LinearOpMode {
             backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-
-
             // Set powers. For now I'm setting to maxPower, so be careful.
             // In the future I'd like to add some acceleration control through powers, which
             // should help with encoder accuracy. Stay tuned.
@@ -147,8 +146,6 @@ public class Hardware extends LinearOpMode {
             frontLeft.setPower(maxPower);
             backRight.setPower(maxPower);
             backLeft.setPower(maxPower);
-
-            //
 
             while (opModeIsActive() &&
                     (frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy() )) {
@@ -177,11 +174,6 @@ public class Hardware extends LinearOpMode {
             frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-
-
-
 
         }
         return 0;
@@ -214,9 +206,6 @@ public class Hardware extends LinearOpMode {
             backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-
-
-
             // Set powers. For now I'm setting to maxPower, so be careful.
             // In the future I'd like to add some acceleration control through powers, which
             // should help with encoder accuracy. Stay tuned.
@@ -245,9 +234,6 @@ public class Hardware extends LinearOpMode {
             backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-
-
-
         }
 
 
@@ -261,6 +247,7 @@ public class Hardware extends LinearOpMode {
         motor.setTargetPosition(pos);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(power);
+
         while (motor.isBusy() && opModeIsActive()){
             idle();
         }
