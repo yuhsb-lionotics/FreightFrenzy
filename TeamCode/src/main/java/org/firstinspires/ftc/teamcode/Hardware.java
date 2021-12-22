@@ -16,7 +16,7 @@ public class Hardware extends LinearOpMode {
     protected DcMotor frontLeft, frontRight, backLeft, backRight, clawPulley, carousel ;
     protected Servo leftClawFinger, rightClawFinger;
     protected Claw claw;
-    protected TouchSensor touchSensorLeft, touchSensorRight;
+    protected TouchSensor wheelTouchSensor;
 
 
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // CHECK THIS
@@ -40,8 +40,7 @@ public class Hardware extends LinearOpMode {
         rightClawFinger = hardwareMap.servo.get("clawR");
         claw = new Claw(leftClawFinger,rightClawFinger);
         carousel = hardwareMap.dcMotor.get("carousel");
-        touchSensorLeft = hardwareMap.touchSensor.get("touchSensorLeft");
-        touchSensorRight = hardwareMap.touchSensor.get("touchSensorRight");
+        wheelTouchSensor = hardwareMap.touchSensor.get("wheel");
 
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -109,7 +108,7 @@ public class Hardware extends LinearOpMode {
         frontRight.setPower(rightPower - strafePower);
         backRight.setPower(rightPower + strafePower);
     }
-    public int encoderUntilHit(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
+    public int encoderUntilHit(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches, TouchSensor touchSensor){
         double newFRTarget;
         double newFLTarget;
         double newBLTarget;
@@ -153,7 +152,7 @@ public class Hardware extends LinearOpMode {
 
             while (opModeIsActive() &&
                     (frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy() )) {
-                if (touchSensorLeft.isPressed() || touchSensorRight.isPressed()){
+                if (touchSensor.isPressed()){
                     frontRight.setPower(0);
                     frontLeft.setPower(0);
                     backRight.setPower(0);

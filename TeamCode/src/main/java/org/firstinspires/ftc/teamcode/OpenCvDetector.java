@@ -17,17 +17,19 @@ import java.util.List;
 // Thank you Team Wolf Corp (#12525)
 public class OpenCvDetector extends OpenCvPipeline {
 
-
     enum ElementLocation {
         LEFT,
         RIGHT,
-        MIDDLE
+        MIDDLE,
+        ERROR
     }
 
     ElementLocation location;
     // Places within the frame to not care about colored objects
     private static final int TOP_BOUND = 40;
     private static final int BOTTOM_BOUND = 200;
+    public final int LEFT_BOUND = 106;
+    public final int RIGHT_BOUND = 212;
 
 
     @Override
@@ -41,9 +43,8 @@ public class OpenCvDetector extends OpenCvPipeline {
         Mat mat = new Mat();
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
-        // if something is wrong, we assume since that's the easiest to get to.
         if (mat.empty()) {
-            location = ElementLocation.LEFT;
+            location = ElementLocation.ERROR;
             return input;
         }
 
@@ -83,11 +84,11 @@ public class OpenCvDetector extends OpenCvPipeline {
             // TODO: Switch to submat for what to look in.
             // TODO: Tune the boundaries for the different places, and also where within the frame to not look
 
-            if (boundRect[i].x < 106 && boundRect[i].y > TOP_BOUND && boundRect[i].y < BOTTOM_BOUND){
+            if (boundRect[i].x < LEFT_BOUND && boundRect[i].y > TOP_BOUND && boundRect[i].y < BOTTOM_BOUND){
                 location = ElementLocation.LEFT;
-            } else if (boundRect[i].x < 212 && boundRect[i].y > TOP_BOUND && boundRect[i].y < BOTTOM_BOUND){
+            } else if (boundRect[i].x < RIGHT_BOUND && boundRect[i].y > TOP_BOUND && boundRect[i].y < BOTTOM_BOUND){
                 location = ElementLocation.MIDDLE;
-            } else if (boundRect[i].x > 212 && boundRect[i].y > TOP_BOUND && boundRect[i].y < BOTTOM_BOUND) {
+            } else if (boundRect[i].x > RIGHT_BOUND && boundRect[i].y > TOP_BOUND && boundRect[i].y < BOTTOM_BOUND) {
                 location = ElementLocation.RIGHT;
             }
 
@@ -96,7 +97,8 @@ public class OpenCvDetector extends OpenCvPipeline {
 
         Imgproc.rectangle(mat, new Point(0,0), new Point(320,TOP_BOUND), new Scalar(0.5, 76.9, 89.8), -1 );
         Imgproc.rectangle(mat, new Point(0,240), new Point(320,BOTTOM_BOUND), new Scalar(0.5, 76.9, 89.8), -1 );
-
+        Imgproc.line     (mat, new Point(LEFT_BOUND, 0),new Point(LEFT_BOUND, 240), new Scalar(0,0,0), 2 );
+        Imgproc.line     (mat, new Point(RIGHT_BOUND, 0),new Point(RIGHT_BOUND, 240), new Scalar(0,0,0), 2 );
 
 
         // Convert back to RGB for the camera frame
