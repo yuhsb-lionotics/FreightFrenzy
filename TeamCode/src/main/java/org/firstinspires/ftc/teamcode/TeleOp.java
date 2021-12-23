@@ -32,11 +32,16 @@ public class TeleOp extends Hardware{
                 sleep(50);
             } else if (gamepad2.dpad_down) {
                 raiseClaw(-0.5);
-            } /* else if (gamepad2.dpad_left) {
-                raiseClawPos(2590, 0.5);
+            } else if (gamepad2.dpad_left) {
+                Thread openThread = new Thread(() -> {raiseClawPos(2590, 0.5);
+                });
+//                raiseClawPos(2590, 0.5);
+                openThread.start();
             } else if (gamepad2.dpad_right) {
-                raiseClawPos(0, 0.5);
-            } */ else {
+                Thread closeThread = new Thread(() -> {raiseClawPos(0, 0.5);
+                });
+                closeThread.start();
+            } else {
                 raiseClaw(0);
             }
 
