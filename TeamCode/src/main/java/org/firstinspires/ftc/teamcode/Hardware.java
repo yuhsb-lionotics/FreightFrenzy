@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -14,9 +14,10 @@ public class Hardware extends LinearOpMode {
     //You should put constants here
 
     protected DcMotor frontLeft, frontRight, backLeft, backRight, clawPulley, carousel ;
-    protected Servo leftClawFinger, rightClawFinger;
-    protected Claw claw;
+    protected CRServo grabber;
     protected TouchSensor wheelTouchSensor;
+    private boolean tryingToGrab = false;
+    private double grabberPower = 0;
 
 
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // CHECK THIS
@@ -36,9 +37,7 @@ public class Hardware extends LinearOpMode {
         backRight = hardwareMap.dcMotor.get("backRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         clawPulley = hardwareMap.dcMotor.get("clawPulley");
-        leftClawFinger = hardwareMap.servo.get("clawL");
-        rightClawFinger = hardwareMap.servo.get("clawR");
-        claw = new Claw(leftClawFinger,rightClawFinger);
+        grabber = hardwareMap.crservo.get("grabber");
         carousel = hardwareMap.dcMotor.get("carousel");
         wheelTouchSensor = hardwareMap.touchSensor.get("wheel");
 
@@ -91,23 +90,6 @@ public class Hardware extends LinearOpMode {
         strafe(power, power);
     }
     public void strafeRight(final double power) { strafe(-power, power); }
-
-    public void tankControl(double maxPower) { // 0 < maxPower <= 1
-        double leftPower = -gamepad1.left_stick_y * maxPower;
-        double rightPower = -gamepad1.right_stick_y * maxPower;
-        double strafePower = gamepad1.right_stick_x * maxPower;
-        //double strafePower = (gamepad1.right_trigger - gamepad1.left_trigger) * maxPower; //positive is to the right
-
-        double strafePowerLimit = Math.min(1 - Math.abs(rightPower) , 1 - Math.abs(leftPower));
-        strafePower = Range.clip(strafePower, -strafePowerLimit, strafePowerLimit);
-
-        // This will set each motor to a power between -1 and +1 such that the equation for
-        // holonomic wheels works.
-        frontLeft.setPower(leftPower  + strafePower);
-        backLeft.setPower(leftPower  - strafePower);
-        frontRight.setPower(rightPower - strafePower);
-        backRight.setPower(rightPower + strafePower);
-    }
 
     public int encoderUntilHit(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches, TouchSensor touchSensor){
         double newFRTarget;
@@ -257,9 +239,32 @@ public class Hardware extends LinearOpMode {
     public void raiseClawPos(int pos, double power){
         encoderToSpecificPos(clawPulley, pos, power);
     }
-    public void setCarouselPower(double power){
-        carousel.setPower(power);
+
+    //Start the process of turning the servo to grab cargo until the touch sensor is pressed
+    public void startGrabbing(double power) {
+        if (wheelTouchSensor.isPressed()) {
+            stopGrabbing();
+        } else {
+            tryingToGrab = true;
+            grabberPower = power;
+            grabber.setPower(grabberPower);
+        }
     }
+
+    //Check if the touch sensor is pressed, and stop if so
+    public void updateGrabbing() {
+        if (tryingToGrab && wheelTouchSensor.isPressed()) {
+            stopGrabbing();
+        }
+    }
+
+    //Stop the process of turning the servo to grab cargo
+    public void stopGrabbing() {
+        tryingToGrab = false;
+        grabberPower = 0;
+        grabber.setPower(0);
+    }
+
     // Last thing is an empty runOpMode because it's a linearopmode
     @Override
     public void runOpMode() throws InterruptedException {

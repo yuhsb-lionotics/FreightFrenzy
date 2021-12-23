@@ -34,7 +34,7 @@ public class Auto extends Hardware {
 //            idle();
 //        }
 
-        claw.setPosition(0.55);
+
         waitForStart();
         // Move forward
         // Move to each place of the duck, checking the color sensor
@@ -103,8 +103,7 @@ public class Auto extends Hardware {
 
         raiseClawPos(2600,0.6);
         encoderDrive(0.6, 6,6,6,6);
-        // Open claw.
-        claw.setPosition(0.9);
+        // TODO: Release claw here
         encoderDrive(0.6, -6,-6,-6,-6);
         encoderDrive(0.6, -10.5,-10.5,-10.5,-10.5);
 
@@ -148,11 +147,11 @@ public class Auto extends Hardware {
                 case "Load":
                     telemetry.addLine("Loading preload box. Press dpad up to close");
                     telemetry.update();
-                    claw.setPosition(1);
+                    //claw.setPosition(1);
                     while(!gamepad1.dpad_up){
                         idle();
                     }
-                    claw.setPosition(0.55);
+                    //claw.setPosition(0.55);
                     if (gamepad1.x){
                         currentParameter = "Delay";
                     }

@@ -17,15 +17,9 @@ public class TeleOp extends Hardware{
         while (opModeIsActive()) {
             tankControl(0.8); //CHANGE THIS
 
-            //control claw fingers
-            //a for close, b for open
-            if (gamepad2.a) {
-                //close claw
-                claw.setPosition(0.55);
-            } else if (gamepad2.b) {
-                //open claw
-                claw.setPosition(0.8);
-            }
+            //control grabber
+            //add code here
+
             //Control clawPulley
             if (gamepad2.dpad_up) {
                 raiseClaw(0.5);
@@ -51,7 +45,7 @@ public class TeleOp extends Hardware{
                 carousel.setPower(-0.9);
             }
             else{
-                setCarouselPower(0);
+                carousel.setPower(0);
             }
             telemetry.addData("ClawPos", clawPos);
             telemetry.addData("clawPulley", clawPulley.getCurrentPosition());
