@@ -8,7 +8,6 @@ public class ParkInWarehouseBlue extends Hardware{
         hardwareSetup();
         waitForStart();
         //close claw
-        claw.setPosition(0.55);
         //a little to the left
         encoderDrive(0.3,1,-1,1,-1);
         //forward
