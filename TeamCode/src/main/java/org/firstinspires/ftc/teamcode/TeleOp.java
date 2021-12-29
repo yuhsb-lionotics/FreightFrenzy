@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.Range;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp")
 public class TeleOp extends Hardware{
-    Button gamepad2a = new Button();
+    Button gamepad2a = new Button(false);
 
     @Override
     public void runOpMode() throws InterruptedException {
