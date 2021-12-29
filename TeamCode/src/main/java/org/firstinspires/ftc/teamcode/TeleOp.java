@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.util.Range;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp")
 public class TeleOp extends Hardware{
+    Button gamepad2a = new Button();
+
     @Override
     public void runOpMode() throws InterruptedException {
         hardwareSetup();
@@ -14,11 +16,18 @@ public class TeleOp extends Hardware{
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         int clawPos = 1;
         waitForStart();
+        //Update the gamepad2a button object with the newest value
+        gamepad2a.update(gamepad2.a);
         while (opModeIsActive()) {
+            gamepad2a.update(gamepad2.a);
             tankControl(0.8); //CHANGE THIS
 
-            //control grabber
-            //add code here
+            //start grabbing if button a is pressed on gamepad2
+            if(gamepad2a.isNewlyPressed()) {
+                startGrabbing(0.5);
+            }
+            //check if grabbing needs to be stopped, and stop if so
+            updateGrabbing();
 
             //Control clawPulley
             if (gamepad2.dpad_up) {
