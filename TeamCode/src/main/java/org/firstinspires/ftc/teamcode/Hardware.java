@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 public class Hardware extends LinearOpMode {
 
@@ -39,7 +38,7 @@ public class Hardware extends LinearOpMode {
         clawPulley = hardwareMap.dcMotor.get("clawPulley");
         grabber = hardwareMap.crservo.get("grabber");
         carousel = hardwareMap.dcMotor.get("carousel");
-        wheelTouchSensor = hardwareMap.touchSensor.get("wheel");
+//        wheelTouchSensor = hardwareMap.touchSensor.get("wheel");
 
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);

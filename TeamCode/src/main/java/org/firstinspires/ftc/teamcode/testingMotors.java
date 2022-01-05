@@ -11,7 +11,7 @@ public class testingMotors extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         waitForStart();
-        motorToTest =  hardwareMap.dcMotor.get("motor");
+        motorToTest =  hardwareMap.dcMotor.get("frontLeft");
         motorToTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sleep(1000);
         motorToTest.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
