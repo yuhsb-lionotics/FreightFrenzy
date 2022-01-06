@@ -15,7 +15,7 @@ public class Hardware extends LinearOpMode {
     protected DcMotor frontLeft, frontRight, backLeft, backRight, clawPulley, carousel ;
     protected CRServo grabber;
     protected TouchSensor wheelTouchSensor;
-    private boolean tryingToGrab = false;
+    public boolean tryingToGrab = false;
     private double grabberPower = 0;
 
 
@@ -38,7 +38,7 @@ public class Hardware extends LinearOpMode {
         clawPulley = hardwareMap.dcMotor.get("clawPulley");
         grabber = hardwareMap.crservo.get("grabber");
         carousel = hardwareMap.dcMotor.get("carousel");
-//        wheelTouchSensor = hardwareMap.touchSensor.get("wheel");
+        wheelTouchSensor = hardwareMap.touchSensor.get("wheel");
 
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -246,7 +246,7 @@ public class Hardware extends LinearOpMode {
         } else {
             tryingToGrab = true;
             grabberPower = power;
-            grabber.setPower(grabberPower);
+            grabber.setPower(-grabberPower);
         }
     }
 

@@ -26,12 +26,21 @@ public class TeleOp extends Hardware{
             if(gamepad2a.isNewlyPressed()) {
                 startGrabbing(0.5);
             }
+
             //check if grabbing needs to be stopped, and stop if so
             updateGrabbing();
-
+            // Eject the cube
+            if(gamepad2.b && !tryingToGrab){
+                grabber.setPower(0.9);
+            } else if (!tryingToGrab){
+                grabber.setPower(0);
+            }
+            telemetry.addData("TryingToGrab:",tryingToGrab);
+            telemetry.addData("Pressed",wheelTouchSensor.isPressed());
+            telemetry.addData("gamepad2b",gamepad2.b);
             //Control clawPulley
             if (gamepad2.dpad_up) {
-                raiseClaw(0.5);
+                raiseClaw(0.8);
                 sleep(50);
             } else if (gamepad2.dpad_down) {
                 raiseClaw(-0.5);
@@ -56,6 +65,7 @@ public class TeleOp extends Hardware{
             else{
                 carousel.setPower(0);
             }
+
             telemetry.addData("ClawPos", clawPos);
             telemetry.addData("clawPulley", clawPulley.getCurrentPosition());
             telemetry.update();

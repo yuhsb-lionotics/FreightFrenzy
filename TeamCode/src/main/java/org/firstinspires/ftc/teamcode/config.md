@@ -7,6 +7,10 @@ Control hub:
         Port 2 - Nothing
         Port 3 - carousel
 
+    I2C:
+
+        Port 1: wheel
+
 Expansion hub:
 
     Motors:
