@@ -29,7 +29,8 @@ public class TeleOp extends Hardware{
 
             //check if grabbing needs to be stopped, and stop if so
             updateGrabbing();
-            // Eject the cube
+
+            // Eject the cube if b is pressed
             if(gamepad2.b && !tryingToGrab){
                 grabber.setPower(0.9);
             } else if (!tryingToGrab){
