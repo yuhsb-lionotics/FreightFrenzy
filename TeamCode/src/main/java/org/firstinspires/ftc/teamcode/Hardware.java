@@ -43,8 +43,9 @@ public class Hardware extends LinearOpMode {
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotor.Direction.FORWARD); //No idea why this is different than backRight. The wheel was just moving backwards
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
+        grabber.setDirection(DcMotor.Direction.REVERSE);
 
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -59,6 +60,7 @@ public class Hardware extends LinearOpMode {
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        clawPulley.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         carousel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Use encoders
@@ -66,6 +68,7 @@ public class Hardware extends LinearOpMode {
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        clawPulley.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         carousel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData("Status:", "Setup Complete");
@@ -220,10 +223,6 @@ public class Hardware extends LinearOpMode {
 
     }
 
-    public void raiseClaw(double power){
-        clawPulley.setPower(power);
-    }
-
     public void encoderToSpecificPos(DcMotor motor, int pos , double power){
         motor.setTargetPosition(pos);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -246,7 +245,7 @@ public class Hardware extends LinearOpMode {
         } else {
             tryingToGrab = true;
             grabberPower = power;
-            grabber.setPower(-grabberPower);
+            grabber.setPower(grabberPower);
         }
     }
 

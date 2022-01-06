@@ -24,7 +24,8 @@ public class TeleOp extends Hardware{
 
             //start grabbing if button a is pressed on gamepad2
             if(gamepad2a.isNewlyPressed()) {
-                startGrabbing(0.5);
+                if(tryingToGrab) stopGrabbing();
+                else startGrabbing(0.5);
             }
 
             //check if grabbing needs to be stopped, and stop if so
@@ -32,7 +33,7 @@ public class TeleOp extends Hardware{
 
             // Eject the cube if b is pressed
             if(gamepad2.b && !tryingToGrab){
-                grabber.setPower(0.9);
+                grabber.setPower(-0.9);
             } else if (!tryingToGrab){
                 grabber.setPower(0);
             }
@@ -41,23 +42,34 @@ public class TeleOp extends Hardware{
             telemetry.addData("gamepad2b",gamepad2.b);
             //Control clawPulley
             if (gamepad2.dpad_up) {
-                raiseClaw(0.8);
+                clawPulley.setPower(0.8);
                 sleep(50);
             } else if (gamepad2.dpad_down) {
-                raiseClaw(-0.5);
+                clawPulley.setPower(-0.5);
             } else if (gamepad2.dpad_left) {
-                Thread openThread = new Thread(() -> {raiseClawPos(2590, 0.5);
+                //raise claw to highest level of shipping hub
+                clawPulley.setTargetPosition(2590);
+                clawPulley.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                clawPulley.setPower(0.5);
+
+                /*Thread openThread = new Thread(() -> {raiseClawPos(2590, 0.5);
                 });
 //                raiseClawPos(2590, 0.5);
-                openThread.start();
+                openThread.start(); */
             } else if (gamepad2.dpad_right) {
                 Thread closeThread = new Thread(() -> {raiseClawPos(0, 0.5);
                 });
                 closeThread.start();
             } else {
-                raiseClaw(0);
+                clawPulley.setPower(0);
+            }
+            //stop the claw pulley if it's at its destination
+            if(clawPulley.getMode() == DcMotor.RunMode.RUN_TO_POSITION && !clawPulley.isBusy()) {
+                clawPulley.setPower(0);
+                clawPulley.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
+            //control carousel
             if (gamepad2.x) {
                 carousel.setPower(0.9);
             } else if (gamepad2.y){
@@ -68,7 +80,8 @@ public class TeleOp extends Hardware{
             }
 
             telemetry.addData("ClawPos", clawPos);
-            telemetry.addData("clawPulley", clawPulley.getCurrentPosition());
+            telemetry.addData("clawPulley mode", clawPulley.getMode());
+            telemetry.addData("clawPulley position", clawPulley.getCurrentPosition());
             telemetry.update();
             }
         }
