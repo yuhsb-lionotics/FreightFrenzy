@@ -42,41 +42,32 @@ public class TeleOp extends Hardware{
             telemetry.addData("gamepad2b",gamepad2.b);
             //Control clawPulley
             if (gamepad2.dpad_up) {
-                clawPulley.setPower(0.8);
+                clawPulley.setPower(0.6);
                 sleep(50);
             } else if (gamepad2.dpad_down) {
-                clawPulley.setPower(-0.5);
+                clawPulley.setPower(-0.7);
             } else if (gamepad2.dpad_left) {
                 //raise claw to highest level of shipping hub
-                clawPulley.setTargetPosition(2590);
-                clawPulley.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                clawPulley.setPower(0.5);
-
-                /*Thread openThread = new Thread(() -> {raiseClawPos(2590, 0.5);
-                });
-//                raiseClawPos(2590, 0.5);
-                openThread.start(); */
+                raiseClawPos(3500,0.7);
             } else if (gamepad2.dpad_right) {
-                Thread closeThread = new Thread(() -> {raiseClawPos(0, 0.5);
-                });
-                closeThread.start();
-            } else {
+               raiseClawPos(0, 0.6);
+            } else if(!clawPulley.isBusy()){
                 clawPulley.setPower(0);
             }
+            //control carousel
+            if (gamepad2.x) {
+                carousel.setPower(1);
+            } else if (gamepad2.y){
+                carousel.setPower(1);
+            }
+            else{
+                carousel.setPower(0);
+            }
+
             //stop the claw pulley if it's at its destination
             if(clawPulley.getMode() == DcMotor.RunMode.RUN_TO_POSITION && !clawPulley.isBusy()) {
                 clawPulley.setPower(0);
                 clawPulley.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-
-            //control carousel
-            if (gamepad2.x) {
-                carousel.setPower(0.9);
-            } else if (gamepad2.y){
-                carousel.setPower(-0.9);
-            }
-            else{
-                carousel.setPower(0);
             }
 
             telemetry.addData("ClawPos", clawPos);

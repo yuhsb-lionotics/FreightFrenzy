@@ -236,6 +236,9 @@ public class Hardware extends LinearOpMode {
     }
     public void raiseClawPos(int pos, double power){
         encoderToSpecificPos(clawPulley, pos, power);
+        clawPulley.setTargetPosition(pos);
+        clawPulley.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        clawPulley.setPower(power);
     }
 
     //Start the process of turning the servo to grab cargo until the touch sensor is pressed
