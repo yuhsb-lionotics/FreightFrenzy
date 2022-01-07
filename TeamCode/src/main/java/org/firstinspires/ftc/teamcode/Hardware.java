@@ -235,7 +235,7 @@ public class Hardware extends LinearOpMode {
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     public void raiseClawPos(int pos, double power){
-        encoderToSpecificPos(clawPulley, pos, power);
+//        encoderToSpecificPos(clawPulley, pos, power);
         clawPulley.setTargetPosition(pos);
         clawPulley.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         clawPulley.setPower(power);
