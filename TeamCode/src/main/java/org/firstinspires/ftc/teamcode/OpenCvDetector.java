@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -17,14 +19,14 @@ import java.util.List;
 // Thank you Team Wolf Corp (#12525)
 public class OpenCvDetector extends OpenCvPipeline {
 
-    enum ElementLocation {
+    public enum ElementLocation {
         LEFT,
         RIGHT,
         MIDDLE,
         ERROR
     }
 
-    ElementLocation location;
+    public ElementLocation location;
     // Places within the frame to not care about colored objects
     private static final int TOP_EXCLUDE = 40;
     private static final int BOTTOM_EXCLUDE = 200;
@@ -90,11 +92,15 @@ public class OpenCvDetector extends OpenCvPipeline {
             // TODO: Tune the boundaries for the different places, and also where within the frame to not look
 
             if (boundRect[i].x < LEFT_BOUND){
-                location = ElementLocation.LEFT;
+                this.location = ElementLocation.LEFT;
+                Log.i("LOCATION", String.valueOf(this.getLocation()));
             } else if (boundRect[i].x < RIGHT_BOUND){
-                location = ElementLocation.MIDDLE;
+                this.location = ElementLocation.MIDDLE;
+                Log.i("LOCATION","LEFT");
             } else if (boundRect[i].x > RIGHT_BOUND) {
-                location = ElementLocation.RIGHT;
+                this.location = ElementLocation.RIGHT;
+                Log.i("LOCATION","LEFT");
+
             }
 
         }
