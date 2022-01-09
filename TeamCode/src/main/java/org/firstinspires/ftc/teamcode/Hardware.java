@@ -18,6 +18,11 @@ public class Hardware extends LinearOpMode {
     public boolean tryingToGrab = false;
     private double grabberPower = 0;
 
+    //encoder positions for clawPulley
+    //3500 for top, 1700 for middle, 7700 for low, 0 for ground
+    public static final int  LOW_POSITION =  770;
+    public static final int  MIDDLE_POSITION =  1680;
+    public static final int  HIGH_POSITION =  3500;
 
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // CHECK THIS
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
@@ -202,8 +207,20 @@ public class Hardware extends LinearOpMode {
             //
 
             while (opModeIsActive() &&
-                    (frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy() )) {
+                    (frontRight.isBusy() || frontLeft.isBusy() || backRight.isBusy() || backLeft.isBusy() )) {
                 idle();
+//                if(frontLeft.isBusy() && frontLeftInches != 0){
+//                    frontLeft.setPower(0);
+//                }
+//                if(frontRight.isBusy() && frontRightInches != 0){
+//                    frontRight.setPower(0);
+//                }
+//                if(backLeft.isBusy() && backLeftInches != 0){
+//                    backLeft.setPower(0);
+//                }
+//                if(backRight.isBusy() && backRightInches != 0){
+//                    backRight.setPower(0);
+//                }
             }
             // Set Zero Power
             frontRight.setPower(0);
@@ -221,6 +238,9 @@ public class Hardware extends LinearOpMode {
         }
 
 
+    }
+    public void encoderStrafeAndRotate (double maxPower, double forwardRightInches, double forwardLeftInches, double ccRotation) {
+        encoderDrive(maxPower, forwardLeftInches + ccRotation, forwardRightInches - ccRotation, forwardLeftInches - ccRotation, forwardRightInches + ccRotation);
     }
 
     public void encoderToSpecificPos(DcMotor motor, int pos , double power){
@@ -240,6 +260,18 @@ public class Hardware extends LinearOpMode {
         clawPulley.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         clawPulley.setPower(power);
     }
+    public void raiseClawPosAndStop(int pos, double power){
+//        encoderToSpecificPos(clawPulley, pos, power);
+        clawPulley.setTargetPosition(pos);
+        clawPulley.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        clawPulley.setPower(power);
+        while(clawPulley.isBusy()){
+            idle();
+        }
+        clawPulley.setPower(0);
+        clawPulley.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
 
     //Start the process of turning the servo to grab cargo until the touch sensor is pressed
     public void startGrabbing(double power) {

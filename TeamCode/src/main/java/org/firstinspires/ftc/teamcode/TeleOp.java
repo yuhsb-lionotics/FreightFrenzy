@@ -16,13 +16,14 @@ public class TeleOp extends Hardware{
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         int clawPos = 1;
         waitForStart();
+
         //Update the gamepad2a button object with the newest value
         gamepad2a.update(gamepad2.a);
         while (opModeIsActive()) {
             gamepad2a.update(gamepad2.a);
             tankControl(0.8); //CHANGE THIS
 
-            //start grabbing if button a is pressed on gamepad2
+            //turn grabbing on/off when button A is pressed
             if(gamepad2a.isNewlyPressed()) {
                 if(tryingToGrab) stopGrabbing();
                 else startGrabbing(0.5);
@@ -48,7 +49,7 @@ public class TeleOp extends Hardware{
                 clawPulley.setPower(-0.7);
             } else if (gamepad2.dpad_left) {
                 //raise claw to highest level of shipping hub
-                raiseClawPos(3500,0.7);
+                raiseClawPos(HIGH_POSITION,0.7);
             } else if (gamepad2.dpad_right) {
                raiseClawPos(0, 0.6);
             } else if(!clawPulley.isBusy()){
@@ -73,6 +74,7 @@ public class TeleOp extends Hardware{
             telemetry.addData("ClawPos", clawPos);
             telemetry.addData("clawPulley mode", clawPulley.getMode());
             telemetry.addData("clawPulley position", clawPulley.getCurrentPosition());
+            telemetry.addData("clawPulley power", clawPulley.getPower());
             telemetry.update();
             }
         }

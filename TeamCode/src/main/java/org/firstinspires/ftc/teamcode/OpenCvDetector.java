@@ -28,11 +28,13 @@ public class OpenCvDetector extends OpenCvPipeline {
 
     public ElementLocation location;
     // Places within the frame to not care about colored objects
-    private static final int TOP_EXCLUDE = 40;
-    private static final int BOTTOM_EXCLUDE = 200;
+    private static final int TOP_EXCLUDE = 80;
+    private static final int BOTTOM_EXCLUDE = 240;
     public final int LEFT_BOUND = 106;
     public final int RIGHT_BOUND = 212;
-
+    public OpenCvDetector(){
+        location = ElementLocation.ERROR;
+    }
 
     @Override
     public Mat processFrame(Mat input) {
@@ -45,10 +47,10 @@ public class OpenCvDetector extends OpenCvPipeline {
         Mat mat = new Mat();
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
-        if (mat.empty()) {
-            location = ElementLocation.ERROR;
-            return input;
-        }
+//        if (mat.empty()) {
+//            location = ElementLocation.ERROR;
+//            return input;
+//        }
 
 
         // We create a HSV range for yellow to detect ducks / TSE
@@ -96,10 +98,10 @@ public class OpenCvDetector extends OpenCvPipeline {
                 Log.i("LOCATION", String.valueOf(this.getLocation()));
             } else if (boundRect[i].x < RIGHT_BOUND){
                 this.location = ElementLocation.MIDDLE;
-                Log.i("LOCATION","LEFT");
+                Log.i("LOCATION","MIDDLE");
             } else if (boundRect[i].x > RIGHT_BOUND) {
                 this.location = ElementLocation.RIGHT;
-                Log.i("LOCATION","LEFT");
+                Log.i("LOCATION","RIGHT");
 
             }
 
