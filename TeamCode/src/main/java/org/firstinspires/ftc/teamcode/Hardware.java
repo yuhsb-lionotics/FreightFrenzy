@@ -86,6 +86,13 @@ public class Hardware extends LinearOpMode {
         frontRight.setPower(-power);
         backRight.setPower(-power);
     }
+    public void setPowers(double frontLeftP, double frontRightP, double backLeftP, double backRightP){
+        frontLeft.setPower(frontLeftP);
+        frontRight.setPower(frontRightP);
+        backLeft.setPower(backLeftP);
+        backRight.setPower(backRightP);
+
+    }
 
     public void strafe(double forwardLeftPower, double forwardRightPower) {
         frontLeft.setPower(forwardRightPower);
