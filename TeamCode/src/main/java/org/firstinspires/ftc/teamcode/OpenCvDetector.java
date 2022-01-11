@@ -47,10 +47,10 @@ public class OpenCvDetector extends OpenCvPipeline {
         Mat mat = new Mat();
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
-//        if (mat.empty()) {
-//            location = ElementLocation.ERROR;
-//            return input;
-//        }
+        if (mat.empty()) {
+            location = ElementLocation.ERROR;
+            return input;
+        }
 
 
         // We create a HSV range for yellow to detect ducks / TSE
@@ -86,7 +86,10 @@ public class OpenCvDetector extends OpenCvPipeline {
         for (int i = 0; i != boundRect.length; i++) {
             // draw red bounding rectangles on mat
             // the mat has been converted to HSV so we need to use HSV as well
-            Imgproc.rectangle(mat, boundRect[i], new Scalar(0.5, 76.9, 89.8),3);
+            // Shift to account for the submat being used for recognition
+            Rect boundToDraw = boundRect[i];
+            boundToDraw.y = boundToDraw.y - TOP_EXCLUDE;
+            Imgproc.rectangle(mat, boundToDraw, new Scalar(0.5, 76.9, 89.8),3);
 
             //Log.i("Item Location", String.valueOf(boundRect[i]));
             // The frame is 320 wide. For now just splitting it into three.
