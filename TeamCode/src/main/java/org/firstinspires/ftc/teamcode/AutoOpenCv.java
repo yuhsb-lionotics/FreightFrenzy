@@ -59,6 +59,7 @@ public class AutoOpenCv extends Hardware {
             // marker as being
 
             elementLocation = pipeline.getLocation();
+            webcam.stopStreaming();
             telemetry.addData("Final:", elementLocation);
             telemetry.update();
 
