@@ -15,6 +15,8 @@ public class AutoForDinner extends Hardware {
     OpenCvWebcam webcam;
     OpenCvDetector pipeline = new OpenCvDetector();
     public OpenCvDetector.ElementLocation elementLocation = OpenCvDetector.ElementLocation.ERROR;
+    static final double FORWARD_WHEEL_INCHES = 20/Math.sqrt(2);
+    static final double SIDE_WHEEL_INCHES = 8.4/Math.sqrt(2);
 
     @Override
     public void runOpMode(){
@@ -65,22 +67,24 @@ public class AutoForDinner extends Hardware {
         startGrabbing(0.9);
         switch (elementLocation){
             case LEFT:
-                encoderDrive(0.4,8.4,-8.4,8.4,-8.4);
+                encoderDrive(0.4,SIDE_WHEEL_INCHES,-SIDE_WHEEL_INCHES,SIDE_WHEEL_INCHES,-SIDE_WHEEL_INCHES);
                 encoderDrive(0.4,24,24,24,24);
                 break;
 
             case MIDDLE:
-                encoderDrive(0.4,24,24,24,24);
+                encoderDrive(0.4,FORWARD_WHEEL_INCHES,FORWARD_WHEEL_INCHES,FORWARD_WHEEL_INCHES,FORWARD_WHEEL_INCHES);
                 break;
 
             case RIGHT:
-                encoderDrive(0.4,-8.4,8.4,-8.4,8.4);
-                encoderDrive(0.4,24,24,24,24);
+                encoderDrive(0.4,-SIDE_WHEEL_INCHES,SIDE_WHEEL_INCHES,-SIDE_WHEEL_INCHES,SIDE_WHEEL_INCHES);
+                encoderDrive(0.4,FORWARD_WHEEL_INCHES,FORWARD_WHEEL_INCHES,FORWARD_WHEEL_INCHES,FORWARD_WHEEL_INCHES);
                 break;
 
             case ERROR:
                 break;
         }
+        sleep(1000);
+        stopGrabbing();
     }
 
 }

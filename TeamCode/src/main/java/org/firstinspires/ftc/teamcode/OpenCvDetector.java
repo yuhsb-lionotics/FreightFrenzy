@@ -87,9 +87,7 @@ public class OpenCvDetector extends OpenCvPipeline {
             // draw red bounding rectangles on mat
             // the mat has been converted to HSV so we need to use HSV as well
             // Shift to account for the submat being used for recognition
-            Rect boundToDraw = boundRect[i];
-            boundToDraw.y = boundToDraw.y - TOP_EXCLUDE;
-            Imgproc.rectangle(mat, boundToDraw, new Scalar(0.5, 76.9, 89.8),3);
+            Imgproc.rectangle(mat, boundRect[i], new Scalar(0.5, 76.9, 89.8),3);
 
             //Log.i("Item Location", String.valueOf(boundRect[i]));
             // The frame is 320 wide. For now just splitting it into three.
