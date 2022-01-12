@@ -216,6 +216,7 @@ public class Hardware extends LinearOpMode {
             while (opModeIsActive() &&
                     (frontRight.isBusy() || frontLeft.isBusy() || backRight.isBusy() || backLeft.isBusy() )) {
                 idle();
+                updateGrabbing();
 //                if(frontLeft.isBusy() && frontLeftInches != 0){
 //                    frontLeft.setPower(0);
 //                }
