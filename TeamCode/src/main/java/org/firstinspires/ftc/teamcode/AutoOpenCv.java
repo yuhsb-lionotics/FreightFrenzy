@@ -63,26 +63,31 @@ public class AutoOpenCv extends Hardware {
             telemetry.addData("Final:", elementLocation);
             telemetry.update();
 
+            double forwardInches = 0;
+
             switch (elementLocation){
                 case LEFT:
                     raiseClawPosAndStop(LOW_POSITION, 0.7);
+                    forwardInches = 1.5;
                     break;
                 case MIDDLE:
                     raiseClawPosAndStop(MIDDLE_POSITION, 0.7);
+                    forwardInches = 3;
                     break;
                 case RIGHT:
                     raiseClawPosAndStop(HIGH_POSITION, 0.7);
+                    forwardInches = 3.5;
                     break;
                 case ERROR:
                     raiseClawPosAndStop(HIGH_POSITION, 0.7);
+                    forwardInches = 2.5;
                     break;
             }
-
             //move diagonally towards the Shipping Hub
             encoderDrive(0.6, 33, 0, 33, 0);
             sleep(300);
-            //move forward a little - @TODO: this needs to go different distances based on which level we're going for
-            encoderDrive(0.3, 1.5,  1.5, 1.5, 1.5);
+            //move forward a little
+            encoderDrive(0.3, forwardInches,  forwardInches, forwardInches, forwardInches);
             sleep(300);
 
             //release the pre-load box
@@ -90,6 +95,20 @@ public class AutoOpenCv extends Hardware {
             sleep(2000);
             grabber.setPower(0);
             sleep(1000);
+            // move back
+            encoderDrive(0.6, -(15.1 +forwardInches), -(15.1 +forwardInches), -(15.1 +forwardInches), -(15.1 +forwardInches));
+            // Go to carousel
+            // TODO: Make optional!
+            rotate(90,0.9);
+            encoderDrive(0.7,-30,-30,-30,-30);
+            encoderDrive(0.4,-5,-5,-5,-5);
+            // Spin duck
+            carousel.setPower(-1);
+            sleep(3000);
+            carousel.setPower(0);
+            // go to wearhouse
+
+
 
         }
 
