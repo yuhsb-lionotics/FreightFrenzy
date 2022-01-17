@@ -322,7 +322,7 @@ public class Hardware extends LinearOpMode {
 
     }
 
-    public void pidEncoderDrive(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches, double target, double power){
+    public void pidEncoderDrive(double power, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
 
         if (opModeIsActive()){
             // RULE: ArrayLists will be of the following format:
@@ -347,25 +347,19 @@ public class Hardware extends LinearOpMode {
             inches.add(backLeftInches);
 
             // adds start position for all 4 motors (fr, fl, br, bl)
-            for(int i = 0; i < 4; i++){
-                startPosition.add((double) motors.get(i).getCurrentPosition());
-            }
+            for(int i = 0; i < 4; i++){startPosition.add((double) motors.get(i).getCurrentPosition());}
 
             // adds pid for all 4 motors (fr, fl, br, bl)
-            for(int i = 0; i < 4; i++){
-                pids.add(new PIDController(5,0,0)); //(5,0,0) is not a set-in-stone thing
-            }
+            for(int i = 0; i < 4; i++){pids.add(new PIDController(5,0,0));} //(5,0,0) is not a set-in-stone thing
 
             // sets newTarget for all 4 motors (fr, fl, br, bl)
-            for(int i = 0; i < 4; i++){
-                newTargets.add(inches.get(i) * COUNTS_PER_INCH);
-            }
+            for(int i = 0; i < 4; i++){newTargets.add(inches.get(i) * COUNTS_PER_INCH);}
 
             // does pid stuff for all 4 motors (fr, fl, br, bl)
             for(int i = 0; i < 4; i++){
                 pids.get(i).reset();
-                pids.get(i).setSetpoint(target);
-                pids.get(i).setInputRange(0, target * 1.5);
+                pids.get(i).setSetpoint(newTargets.get(i));
+                pids.get(i).setInputRange(0, newTargets.get(i) * 1.5);
                 pids.get(i).setOutputRange(0, 1);
                 pids.get(i).setTolerance(1.00);
                 pids.get(i).enable();
@@ -373,9 +367,7 @@ public class Hardware extends LinearOpMode {
 
             // Run to position
             // does all 4 motors (fr, fl, br, bl)
-            for(int i = 0; i < 4; i++){
-                motors.get(i).setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }
+            for(int i = 0; i < 4; i++){motors.get(i).setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);}
 
             // Set powers. For now I'm setting to maxPower, so be careful.
             // In the future I'd like to add some acceleration control through powers, which
@@ -388,19 +380,15 @@ public class Hardware extends LinearOpMode {
                     motors.get(i).setPower(pids.get(i).performPID((motors.get(i).getCurrentPosition() - startPosition.get(i))));
                     updateGrabbing();
                 }
-            } while(opModeIsActive() && (!pids.get(0).onTarget() || !pids.get(1).onTarget() || !pids.get(2).onTarget() || !pids.get(3).onTarget()));
+            } while(opModeIsActive() && (!pids.get(0).onTarget() && !pids.get(1).onTarget() && !pids.get(2).onTarget() && !pids.get(3).onTarget()));
 
             // Set Zero Power
             // does for all 4 motors (fr, fl, br, bl)
-            for(int i = 0; i < 4; i++){
-                motors.get(i).setPower(0);
-            }
+            for(int i = 0; i < 4; i++){motors.get(i).setPower(0);}
 
             // Go back to Run_Using_Encoder
             // does for all 4 motors (fr, fl, br, bl)
-            for(int i = 0; i < 4; i++){
-                motors.get(i).setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
+            for(int i = 0; i < 4; i++){motors.get(i).setMode(DcMotor.RunMode.RUN_USING_ENCODER);}
         }
 
 
