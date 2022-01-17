@@ -18,6 +18,7 @@ public class Auto extends Hardware {
     @Override
     public void runOpMode() {
         hardwareSetup();
+        imuSetup();
 //        //selectParameters();
 //        telemetry.addData("Status","Waiting for Start");
 //        //Display all parameter values (so far delaySeconds and startingPosition)

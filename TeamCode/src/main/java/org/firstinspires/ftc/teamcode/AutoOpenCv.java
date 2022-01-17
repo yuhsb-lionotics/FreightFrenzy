@@ -15,6 +15,7 @@ public class AutoOpenCv extends Hardware {
     OpenCvWebcam webcam;
     OpenCvDetector pipeline = new OpenCvDetector();
     public OpenCvDetector.ElementLocation elementLocation = OpenCvDetector.ElementLocation.ERROR;
+    double angleToTurnTo = 0;
 
         @Override
         public void runOpMode(){
@@ -40,6 +41,7 @@ public class AutoOpenCv extends Hardware {
                 }
             });
             hardwareSetup();
+            imuSetup();
             /*
              * The INIT-loop:
              * This REPLACES waitForStart!
@@ -68,19 +70,20 @@ public class AutoOpenCv extends Hardware {
             switch (elementLocation){
                 case LEFT:
                     raiseClawPosAndStop(LOW_POSITION, 0.7);
-                    forwardInches = 1.5;
+//                    raiseClawPos(LOW_POSITION,0.7);
+                    forwardInches = 1;
                     break;
                 case MIDDLE:
                     raiseClawPosAndStop(MIDDLE_POSITION, 0.7);
-                    forwardInches = 3;
+//                    raiseClawPos(MIDDLE_POSITION,0.7);
+
+                    forwardInches = 2.5;
                     break;
                 case RIGHT:
-                    raiseClawPosAndStop(HIGH_POSITION, 0.7);
-                    forwardInches = 3.5;
-                    break;
                 case ERROR:
                     raiseClawPosAndStop(HIGH_POSITION, 0.7);
-                    forwardInches = 2.5;
+//                    raiseClawPos(HIGH_POSITION,0.7);
+                    forwardInches = 3.5;
                     break;
             }
             //move diagonally towards the Shipping Hub
@@ -91,24 +94,37 @@ public class AutoOpenCv extends Hardware {
             sleep(300);
 
             //release the pre-load box
-            grabber.setPower(-0.9);
-            sleep(2000);
-            grabber.setPower(0);
+            grabber.setPower(-1);
             sleep(1000);
+            grabber.setPower(0);
+
             // move back
-            encoderDrive(0.6, -(15.1 +forwardInches), -(15.1 +forwardInches), -(15.1 +forwardInches), -(15.1 +forwardInches));
+            encoderDrive(0.8, -(15.1 +forwardInches), -(15.1 +forwardInches), -(15.1 +forwardInches), -(15.1 +forwardInches));
+
             // Go to carousel
             // TODO: Make optional!
-            rotate(90,0.9);
-            encoderDrive(0.7,-30,-30,-30,-30);
-            encoderDrive(0.4,-5,-5,-5,-5);
+            rotate(90,1, false);
+            // Note orientation so we can move rotate back if needed
+            angleToTurnTo = getAngle();
+            telemetry.addData("AngleToTurnTo",angleToTurnTo);
+            telemetry.update();
+            encoderDrive(0.8,-32,-32,-32,-32);
+            //approach the carousel diagonally
+            encoderDrive(0.4,0,-4,0,-4);
             // Spin duck
             carousel.setPower(-1);
             sleep(3000);
             carousel.setPower(0);
-            // go to wearhouse
 
-
+            // GO TO WAREHOUSE:
+            // move away from the carousel
+            setPowers(0.8,0.8,0.8,0.8);
+            sleep(400);
+            rotate(90,0.7,false);
+            //avoid sitting duck alliance partner
+            encoderDrive(0.8,0,24,0,24);
+            encoderDrive(0.8,20,20,20,20);
+            encoderDrive(0.8,24,0,24,0);
 
         }
 

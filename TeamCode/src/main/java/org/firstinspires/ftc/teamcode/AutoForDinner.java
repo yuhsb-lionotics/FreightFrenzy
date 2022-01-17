@@ -43,6 +43,7 @@ public class AutoForDinner extends Hardware {
             }
         });
         hardwareSetup();
+        imuSetup();
         /*
          * The INIT-loop:
          * This REPLACES waitForStart!

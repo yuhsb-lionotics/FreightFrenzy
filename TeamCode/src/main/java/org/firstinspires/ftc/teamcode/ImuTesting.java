@@ -7,7 +7,8 @@ public class ImuTesting extends Hardware{
     @Override
     public void runOpMode() throws InterruptedException {
         hardwareSetup();
+        imuSetup();
         waitForStart();
-        rotate(90,0.8);
+        rotate(90,0.8,true);
     }
 }

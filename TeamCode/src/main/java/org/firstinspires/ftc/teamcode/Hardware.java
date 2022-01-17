@@ -88,6 +88,14 @@ public class Hardware extends LinearOpMode {
         clawPulley.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         carousel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        telemetry.addData("Status:", "Hardware Setup Complete");
+        telemetry.update();
+    }
+
+    public void imuSetup() {
+
+        telemetry.addData("Status","Setting Up IMU");
+        telemetry.update();
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.mode = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -102,20 +110,23 @@ public class Hardware extends LinearOpMode {
         imu.initialize(parameters);
 
         // Create a pid controller with some guess values
-        pidRotate = new PIDController(.003, .00003, 0);
+        pidRotate = new PIDController(.005, .00003, 0);
+
+        telemetry.addData("Status","Calibrating Gyro");
+        telemetry.update();
         // make sure the imu gyro is calibrated before continuing.
         while (!isStopRequested() && !imu.isGyroCalibrated()) {
             sleep(50);
             idle();
         }
 
-        telemetry.addData("Status:", "Setup Complete");
+        telemetry.addData("Status:", "IMU Setup Complete");
         telemetry.update();
     }
 
-    public void rotate(int degrees, double power) {
+    public void rotate(int degrees, double power, boolean reset) {
         // restart imu angle tracking.
-        resetAngle();
+        if(reset) { resetAngle(); }
 
         // if degrees > 359 we cap at 359 with same sign as original degrees.
         if (Math.abs(degrees) > 359) degrees = (int) Math.copySign(359, degrees);
@@ -165,11 +176,12 @@ public class Hardware extends LinearOpMode {
 
         rotation = getAngle();
 
-        // wait for rotation to stop.
-        sleep(500);
-
         // reset angle tracking on new heading.
-        resetAngle();
+        if(reset) {
+            // wait for rotation to stop.
+            sleep(500);
+            resetAngle();
+        }
     }
 
 
@@ -184,7 +196,7 @@ public class Hardware extends LinearOpMode {
      * Get current cumulative angle rotation from last reset.
      * @return Angle in degrees. + = left, - = right from zero point.
      */
-    private double getAngle()
+    public double getAngle()
     {
         // This is assuming that we want the Z axis for the angle. If that's not true then change this.
         // We have to process the angle because the imu works in euler angles so the Z axis is
@@ -277,6 +289,19 @@ public class Hardware extends LinearOpMode {
                     (frontRight.isBusy() || frontLeft.isBusy() || backRight.isBusy() || backLeft.isBusy() )) {
                 idle();
                 updateGrabbing();
+//                updateRaise();
+//                if(!frontRight.isBusy()){
+//                    frontLeft.setPower(0);
+//                }
+//                if(!frontLeft.isBusy()){
+//                    frontLeft.setPower(0);
+//                }
+//                if(!backRight.isBusy()){
+//                    backRight.setPower(0);
+//                }
+//                if(!backLeft.isBusy()){
+//                    backLeft.setPower(0);
+//                }
 
             }
             // Set Zero Power
@@ -290,12 +315,79 @@ public class Hardware extends LinearOpMode {
             frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
         }
 
 
     }
+
+//    public void pidEncoderDrive(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
+//
+//        if (opModeIsActive()){
+//            //calculate and set target positions
+//
+//            PIDController frPID = new PIDController(5, 0,0);
+//            PIDController flPID = new PIDController(5, 0,0);
+//            PIDController blPID = new PIDController(5, 0,0);
+//            PIDController brPID = new PIDController(5, 0,0);
+//            PIDController[] pids = {frPID, flPID, blPID, brPID};
+//
+//            // stop and reset the encoders? Maybe not. Might want to get position and add from there
+//            double newFRTarget;
+//            double newFLTarget;
+//            double newBLTarget;
+//            double newBRTarget;
+//
+//            newFRTarget = frontRight.getCurrentPosition()   +  (int)(frontRightInches * COUNTS_PER_INCH);
+//            newFLTarget = frontLeft.getCurrentPosition()    +  (int)(frontLeftInches * COUNTS_PER_INCH);
+//            newBLTarget = backLeft.getCurrentPosition()     +  (int)(backLeftInches * COUNTS_PER_INCH);
+//            newBRTarget = backRight.getCurrentPosition()    +  (int)(backRightInches * COUNTS_PER_INCH);
+//
+//            for (PIDController pid: pids) {
+//                pid.reset();
+//                pid.setSetpoint(degrees);
+//                pid.setInputRange(0, degrees);
+//                pid.setOutputRange(0, power);
+//                pid.setTolerance(1);
+//                pid.enable();
+//            }
+//
+//            // Run to position
+//            frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//
+//            // Set powers. For now I'm setting to maxPower, so be careful.
+//            // In the future I'd like to add some acceleration control through powers, which
+//            // should help with encoder accuracy. Stay tuned.
+//            runtime.reset();
+//            frontRight.setPower(maxPower);
+//            frontLeft.setPower(maxPower);
+//            backRight.setPower(maxPower);
+//            backLeft.setPower(maxPower);
+//
+//            while (opModeIsActive() &&
+//                    (frontRight.isBusy() || frontLeft.isBusy() || backRight.isBusy() || backLeft.isBusy() )) {
+//                idle();
+//                updateGrabbing();
+//
+//            }
+//            // Set Zero Power
+//            frontRight.setPower(0);
+//            frontLeft.setPower(0);
+//            backRight.setPower(0);
+//            backLeft.setPower(0);
+//
+//            // Go back to Run_Using_Encoder
+//            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        }
+//
+//
+//    }
+
     public void encoderStrafeAndRotate (double maxPower, double forwardRightInches, double forwardLeftInches, double ccRotation) {
         encoderDrive(maxPower, forwardLeftInches + ccRotation, forwardRightInches - ccRotation, forwardLeftInches - ccRotation, forwardRightInches + ccRotation);
     }
@@ -345,6 +437,12 @@ public class Hardware extends LinearOpMode {
     public void updateGrabbing() {
         if (tryingToGrab && wheelTouchSensor.isPressed()) {
             stopGrabbing();
+        }
+    }
+    public void updateRaise(){
+        if(!clawPulley.isBusy()){
+            clawPulley.setPower(0);
+            clawPulley.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 
