@@ -12,6 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import java.util.ArrayList;
+
 public class Hardware extends LinearOpMode {
 
 
@@ -320,73 +322,89 @@ public class Hardware extends LinearOpMode {
 
     }
 
-//    public void pidEncoderDrive(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
-//
-//        if (opModeIsActive()){
-//            //calculate and set target positions
-//
-//            PIDController frPID = new PIDController(5, 0,0);
-//            PIDController flPID = new PIDController(5, 0,0);
-//            PIDController blPID = new PIDController(5, 0,0);
-//            PIDController brPID = new PIDController(5, 0,0);
-//            PIDController[] pids = {frPID, flPID, blPID, brPID};
-//
-//            // stop and reset the encoders? Maybe not. Might want to get position and add from there
-//            double newFRTarget;
-//            double newFLTarget;
-//            double newBLTarget;
-//            double newBRTarget;
-//
-//            newFRTarget = frontRight.getCurrentPosition()   +  (int)(frontRightInches * COUNTS_PER_INCH);
-//            newFLTarget = frontLeft.getCurrentPosition()    +  (int)(frontLeftInches * COUNTS_PER_INCH);
-//            newBLTarget = backLeft.getCurrentPosition()     +  (int)(backLeftInches * COUNTS_PER_INCH);
-//            newBRTarget = backRight.getCurrentPosition()    +  (int)(backRightInches * COUNTS_PER_INCH);
-//
-//            for (PIDController pid: pids) {
-//                pid.reset();
-//                pid.setSetpoint(degrees);
-//                pid.setInputRange(0, degrees);
-//                pid.setOutputRange(0, power);
-//                pid.setTolerance(1);
-//                pid.enable();
-//            }
-//
-//            // Run to position
-//            frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//
-//            // Set powers. For now I'm setting to maxPower, so be careful.
-//            // In the future I'd like to add some acceleration control through powers, which
-//            // should help with encoder accuracy. Stay tuned.
-//            runtime.reset();
-//            frontRight.setPower(maxPower);
-//            frontLeft.setPower(maxPower);
-//            backRight.setPower(maxPower);
-//            backLeft.setPower(maxPower);
-//
-//            while (opModeIsActive() &&
-//                    (frontRight.isBusy() || frontLeft.isBusy() || backRight.isBusy() || backLeft.isBusy() )) {
-//                idle();
-//                updateGrabbing();
-//
-//            }
-//            // Set Zero Power
-//            frontRight.setPower(0);
-//            frontLeft.setPower(0);
-//            backRight.setPower(0);
-//            backLeft.setPower(0);
-//
-//            // Go back to Run_Using_Encoder
-//            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        }
-//
-//
-//    }
+    public void pidEncoderDrive(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches, double target, double power){
+
+        if (opModeIsActive()){
+            // RULE: ArrayLists will be of the following format:
+            // index 0: frontRight
+            // index 1: frontLeft
+            // index 2: backRight when call set input do startpos - currentpos
+            // index 3: backLeft
+            ArrayList<DcMotor> motors = new ArrayList<DcMotor>();
+            ArrayList<Double> inches = new ArrayList<Double>();
+            ArrayList<PIDController> pids = new ArrayList<PIDController>();
+            ArrayList<Double> startPosition = new ArrayList<Double>();
+            ArrayList<Double> newTargets = new ArrayList<Double>();
+
+            motors.add(frontRight);
+            motors.add(frontLeft);
+            motors.add(backRight);
+            motors.add(backLeft);
+
+            inches.add(frontRightInches);
+            inches.add(frontLeftInches);
+            inches.add(backRightInches);
+            inches.add(backLeftInches);
+
+            // adds start position for all 4 motors (fr, fl, br, bl)
+            for(int i = 0; i < 4; i++){
+                startPosition.add((double) motors.get(i).getCurrentPosition());
+            }
+
+            // adds pid for all 4 motors (fr, fl, br, bl)
+            for(int i = 0; i < 4; i++){
+                pids.add(new PIDController(5,0,0)); //(5,0,0) is not a set-in-stone thing
+            }
+
+            // sets newTarget for all 4 motors (fr, fl, br, bl)
+            for(int i = 0; i < 4; i++){
+                newTargets.add(inches.get(i) * COUNTS_PER_INCH);
+            }
+
+            // does pid stuff for all 4 motors (fr, fl, br, bl)
+            for(int i = 0; i < 4; i++){
+                pids.get(i).reset();
+                pids.get(i).setSetpoint(target);
+                pids.get(i).setInputRange(0, target * 1.5);
+                pids.get(i).setOutputRange(0, 1);
+                pids.get(i).setTolerance(1.00);
+                pids.get(i).enable();
+            }
+
+            // Run to position
+            // does all 4 motors (fr, fl, br, bl)
+            for(int i = 0; i < 4; i++){
+                motors.get(i).setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+
+            // Set powers. For now I'm setting to maxPower, so be careful.
+            // In the future I'd like to add some acceleration control through powers, which
+            // should help with encoder accuracy. Stay tuned.
+            runtime.reset();
+
+            //requires documentation
+            do{
+                for(int i = 0; i < 4; i++){
+                    motors.get(i).setPower(pids.get(i).performPID((motors.get(i).getCurrentPosition() - startPosition.get(i))));
+                    updateGrabbing();
+                }
+            } while(opModeIsActive() && (!pids.get(0).onTarget() || !pids.get(1).onTarget() || !pids.get(2).onTarget() || !pids.get(3).onTarget()));
+
+            // Set Zero Power
+            // does for all 4 motors (fr, fl, br, bl)
+            for(int i = 0; i < 4; i++){
+                motors.get(i).setPower(0);
+            }
+
+            // Go back to Run_Using_Encoder
+            // does for all 4 motors (fr, fl, br, bl)
+            for(int i = 0; i < 4; i++){
+                motors.get(i).setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+        }
+
+
+    }
 
     public void encoderStrafeAndRotate (double maxPower, double forwardRightInches, double forwardLeftInches, double ccRotation) {
         encoderDrive(maxPower, forwardLeftInches + ccRotation, forwardRightInches - ccRotation, forwardLeftInches - ccRotation, forwardRightInches + ccRotation);

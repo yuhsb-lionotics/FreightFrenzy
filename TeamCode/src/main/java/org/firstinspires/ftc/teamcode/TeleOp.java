@@ -50,9 +50,9 @@ public class TeleOp extends Hardware{
             }
 
             //check if grabbing needs to be stopped, and stop if so
-//            updateGrabbing();
-            // check if pully needs stopping
-            updateRaise();
+            updateGrabbing();
+            // check if pulley needs stopping
+//            updateRaise();
 
             // Eject the cube if b is pressed
             if((gamepad1.b || gamepad2.b) && !tryingToGrab){
