@@ -87,6 +87,8 @@ public class AutoWarehouseBlue extends Hardware {
                 forwardInches = 3;
                 break;
         }
+
+        //@TODO: Combine these two driving commands
         //move diagonally towards the Shipping Hub
         encoderDrive(0.6, 0, 33, 0, 33);
         //move forward a little

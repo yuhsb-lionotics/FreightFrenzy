@@ -87,6 +87,7 @@ public class AutoOpenCv extends Hardware {
                     forwardInches = 3;
                     break;
             }
+            //@TODO: combine these two driving commands
             //move diagonally towards the Shipping Hub
             encoderDrive(0.6, 33, 0, 33, 0);
             //move forward a little
@@ -114,7 +115,7 @@ public class AutoOpenCv extends Hardware {
             // Go to carousel
             // TODO: Make optional!
             rotate(90,1, false);
-            // Note orientation so we can move rotate back if needed
+            // Note orientation so we can move rotate back if needed @TODO: change this to absolute rather than relative
             angleToTurnTo = getAngle();
             telemetry.addData("AngleToTurnTo",angleToTurnTo);
             telemetry.update();
