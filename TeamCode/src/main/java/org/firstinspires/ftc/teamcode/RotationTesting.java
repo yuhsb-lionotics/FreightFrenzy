@@ -9,6 +9,6 @@ public class RotationTesting extends Hardware{
         hardwareSetup();
         imuSetup();
         waitForStart();
-        rotate(180,1,true);
+        rotate(90,0.6,true);
     }
 }

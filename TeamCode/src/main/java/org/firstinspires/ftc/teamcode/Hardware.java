@@ -112,7 +112,7 @@ public class Hardware extends LinearOpMode {
         imu.initialize(parameters);
 
         // Create a pid controller with some guess values
-        pidRotate = new PIDController(.01, .00003, 0);
+        pidRotate = new PIDController(.01, 0, 0);
 
         telemetry.addData("Status","Calibrating Gyro");
         telemetry.update();
@@ -141,12 +141,15 @@ public class Hardware extends LinearOpMode {
         // dependant on the motor and gearing configuration, starting power, weight of the robot and the
         // on target tolerance. If the controller overshoots, it will reverse the sign of the output
         // turning the robot back toward the setpoint value.
-
+        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
         pidRotate.setInputRange(0, degrees);
         pidRotate.setOutputRange(0, power);
-        pidRotate.setTolerance(1);
+        pidRotate.setTolerance(1.0);
         pidRotate.enable();
 
         // getAngle() returns + when rotating counter clockwise (left) and - when rotating
@@ -184,6 +187,10 @@ public class Hardware extends LinearOpMode {
             sleep(500);
             resetAngle();
         }
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
 
