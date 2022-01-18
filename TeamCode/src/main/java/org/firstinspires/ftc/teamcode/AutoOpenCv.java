@@ -15,7 +15,8 @@ public class AutoOpenCv extends Hardware {
     OpenCvWebcam webcam;
     OpenCvDetector pipeline = new OpenCvDetector();
     public OpenCvDetector.ElementLocation elementLocation = OpenCvDetector.ElementLocation.ERROR;
-    double angleToTurnTo = 0;
+    double angleToTurnTo, angleThatis = 0;
+    int diff;
 
         @Override
         public void runOpMode(){
@@ -83,13 +84,14 @@ public class AutoOpenCv extends Hardware {
                 case ERROR:
 //                    raiseClawPosAndStop(HIGH_POSITION, 0.7);
                     raiseClawPos(HIGH_POSITION,0.7);
-                    forwardInches = 3.5;
+                    forwardInches = 3;
                     break;
             }
             //move diagonally towards the Shipping Hub
             encoderDrive(0.6, 33, 0, 33, 0);
             //move forward a little
             encoderDriveAnd(0.3, forwardInches,  forwardInches, forwardInches, forwardInches);
+
             while(clawPulley.isBusy()) {
                 telemetry.addData("Status","waiting for clawPulley");
                 telemetry.update();
@@ -102,11 +104,12 @@ public class AutoOpenCv extends Hardware {
             grabber.setPower(-1);
             sleep(1000);
             grabber.setPower(0);
-
             telemetry.update();
-
             // move back
-            encoderDriveAnd(0.8, -(15.1 +forwardInches), -(15.1 +forwardInches), -(15.1 +forwardInches), -(15.1 +forwardInches));
+
+            encoderDriveAnd(0.8, -(14.5 +forwardInches), -(14.5 +forwardInches), -(14.5 +forwardInches), -(14.5 +forwardInches));
+
+
 
             // Go to carousel
             // TODO: Make optional!
@@ -115,9 +118,10 @@ public class AutoOpenCv extends Hardware {
             angleToTurnTo = getAngle();
             telemetry.addData("AngleToTurnTo",angleToTurnTo);
             telemetry.update();
+            raiseClawPos(LOW_POSITION,0.6);
             encoderDriveAnd(0.8,-32,-32,-32,-32);
             //approach the carousel diagonally
-            encoderDrive(0.4,0,-4,0,-4);
+            encoderDrive(0.4,0,-5,0,-5);
             // Spin duck
             carousel.setPower(-1);
             sleep(3000);
@@ -125,13 +129,19 @@ public class AutoOpenCv extends Hardware {
 
             // GO TO WAREHOUSE:
             // move away from the carousel
-            setPowers(0.8,0.8,0.8,0.8);
-            sleep(400);
-            rotate(90,0.7,false);
+            encoderDriveAnd(0.8,3,3,3,3);
+//            rotate(90,0.7,false);
+            angleThatis = getAngle();
+            diff = -(int) Math.round((angleThatis - angleToTurnTo) * 1000 ) / 1000;
+            telemetry.addData("Diff",diff);
+            telemetry.addData("AngleToTurnTo",angleToTurnTo);
+            telemetry.addData("AngleThatIs",angleThatis);
+            telemetry.update();
+            rotate(diff, 0.9, true);
             //avoid sitting duck alliance partner
             encoderDrive(0.8,0,24,0,24);
-            encoderDrive(0.8,20,20,20,20);
-            encoderDrive(0.8,24,0,24,0);
+            encoderDriveAnd(0.8,20,20,20,20);
+            encoderDriveAnd(0.8,24,0,24,0);
 
         }
 

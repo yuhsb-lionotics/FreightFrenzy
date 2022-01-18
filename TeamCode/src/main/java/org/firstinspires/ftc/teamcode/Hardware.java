@@ -112,7 +112,7 @@ public class Hardware extends LinearOpMode {
         imu.initialize(parameters);
 
         // Create a pid controller with some guess values
-        pidRotate = new PIDController(.005, .00003, 0);
+        pidRotate = new PIDController(.01, .00003, 0);
 
         telemetry.addData("Status","Calibrating Gyro");
         telemetry.update();
@@ -292,18 +292,26 @@ public class Hardware extends LinearOpMode {
                 idle();
                 updateGrabbing();
                 updateRaise();
-//                if(!frontRight.isBusy()){
-//                    frontLeft.setPower(0);
-//                }
-//                if(!frontLeft.isBusy()){
-//                    frontLeft.setPower(0);
-//                }
-//                if(!backRight.isBusy()){
-//                    backRight.setPower(0);
-//                }
-//                if(!backLeft.isBusy()){
-//                    backLeft.setPower(0);
-//                }
+                if(!frontRight.isBusy()){
+                    frontRight.setPower(0);
+                    frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                }
+                if(!frontLeft.isBusy()){
+                    frontLeft.setPower(0);
+                    frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+                }
+                if(!backRight.isBusy()){
+                    backRight.setPower(0);
+                    backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                }
+                if(!backLeft.isBusy()){
+                    backLeft.setPower(0);
+                    backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                }
 
             }
             // Set Zero Power
