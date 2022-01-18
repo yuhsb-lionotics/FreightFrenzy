@@ -69,37 +69,44 @@ public class AutoOpenCv extends Hardware {
 
             switch (elementLocation){
                 case LEFT:
-                    raiseClawPosAndStop(LOW_POSITION, 0.7);
-//                    raiseClawPos(LOW_POSITION,0.7);
+//                    raiseClawPosAndStop(LOW_POSITION, 0.7);
+                    raiseClawPos(LOW_POSITION,0.7);
                     forwardInches = 1;
                     break;
                 case MIDDLE:
-                    raiseClawPosAndStop(MIDDLE_POSITION, 0.7);
-//                    raiseClawPos(MIDDLE_POSITION,0.7);
+//                    raiseClawPosAndStop(MIDDLE_POSITION, 0.7);
+                    raiseClawPos(MIDDLE_POSITION,0.7);
 
                     forwardInches = 2.5;
                     break;
                 case RIGHT:
                 case ERROR:
-                    raiseClawPosAndStop(HIGH_POSITION, 0.7);
-//                    raiseClawPos(HIGH_POSITION,0.7);
+//                    raiseClawPosAndStop(HIGH_POSITION, 0.7);
+                    raiseClawPos(HIGH_POSITION,0.7);
                     forwardInches = 3.5;
                     break;
             }
             //move diagonally towards the Shipping Hub
             encoderDrive(0.6, 33, 0, 33, 0);
-            sleep(300);
             //move forward a little
-            encoderDrive(0.3, forwardInches,  forwardInches, forwardInches, forwardInches);
-            sleep(300);
+            encoderDriveAnd(0.3, forwardInches,  forwardInches, forwardInches, forwardInches);
+            while(clawPulley.isBusy()) {
+                telemetry.addData("Status","waiting for clawPulley");
+                telemetry.update();
+                idle();
+            }
+            telemetry.addData("Status","releasing pre-load box");
+            telemetry.update();
 
             //release the pre-load box
             grabber.setPower(-1);
             sleep(1000);
             grabber.setPower(0);
 
+            telemetry.update();
+
             // move back
-            encoderDrive(0.8, -(15.1 +forwardInches), -(15.1 +forwardInches), -(15.1 +forwardInches), -(15.1 +forwardInches));
+            encoderDriveAnd(0.8, -(15.1 +forwardInches), -(15.1 +forwardInches), -(15.1 +forwardInches), -(15.1 +forwardInches));
 
             // Go to carousel
             // TODO: Make optional!
@@ -108,7 +115,7 @@ public class AutoOpenCv extends Hardware {
             angleToTurnTo = getAngle();
             telemetry.addData("AngleToTurnTo",angleToTurnTo);
             telemetry.update();
-            encoderDrive(0.8,-32,-32,-32,-32);
+            encoderDriveAnd(0.8,-32,-32,-32,-32);
             //approach the carousel diagonally
             encoderDrive(0.4,0,-4,0,-4);
             // Spin duck

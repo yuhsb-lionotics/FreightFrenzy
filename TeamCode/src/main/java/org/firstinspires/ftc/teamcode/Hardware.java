@@ -291,7 +291,7 @@ public class Hardware extends LinearOpMode {
                     (frontRight.isBusy() || frontLeft.isBusy() || backRight.isBusy() || backLeft.isBusy() )) {
                 idle();
                 updateGrabbing();
-//                updateRaise();
+                updateRaise();
 //                if(!frontRight.isBusy()){
 //                    frontLeft.setPower(0);
 //                }
@@ -322,6 +322,75 @@ public class Hardware extends LinearOpMode {
 
     }
 
+    public void encoderDriveAnd(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
+        // stop and reset the encoders? Maybe not. Might want to get position and add from there
+        double newFRTarget;
+        double newFLTarget;
+        double newBLTarget;
+        double newBRTarget;
+
+        if (opModeIsActive()){
+            //calculate and set target positions
+
+            newFRTarget = frontRight.getCurrentPosition()     +  (frontRightInches * COUNTS_PER_INCH);
+            newFLTarget = frontLeft.getCurrentPosition()     +  (frontLeftInches * COUNTS_PER_INCH);
+            newBLTarget = backLeft.getCurrentPosition()     +  (backLeftInches * COUNTS_PER_INCH);
+            newBRTarget = backRight.getCurrentPosition()     + (backRightInches * COUNTS_PER_INCH);
+
+            backRight.setTargetPosition((int)(newBRTarget));
+            frontRight.setTargetPosition((int)(newFRTarget));
+            frontLeft.setTargetPosition((int)(newFLTarget));
+            backLeft.setTargetPosition((int)(newBLTarget));
+
+            // Run to position
+            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // Set powers. For now I'm setting to maxPower, so be careful.
+            // In the future I'd like to add some acceleration control through powers, which
+            // should help with encoder accuracy. Stay tuned.
+            runtime.reset();
+            frontRight.setPower(maxPower);
+            frontLeft.setPower(maxPower);
+            backRight.setPower(maxPower);
+            backLeft.setPower(maxPower);
+
+            while (opModeIsActive() &&
+                    (frontRight.isBusy() && frontLeft.isBusy() && backRight.isBusy() && backLeft.isBusy() )) {
+                idle();
+                updateGrabbing();
+                updateRaise();
+//                if(!frontRight.isBusy()){
+//                    frontLeft.setPower(0);
+//                }
+//                if(!frontLeft.isBusy()){
+//                    frontLeft.setPower(0);
+//                }
+//                if(!backRight.isBusy()){
+//                    backRight.setPower(0);
+//                }
+//                if(!backLeft.isBusy()){
+//                    backLeft.setPower(0);
+//                }
+
+            }
+            // Set Zero Power
+            frontRight.setPower(0);
+            frontLeft.setPower(0);
+            backRight.setPower(0);
+            backLeft.setPower(0);
+
+            // Go back to Run_Using_Encoder
+            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+
+
+    }
     public void pidEncoderDrive(double power, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
 
         if (opModeIsActive()){
@@ -446,7 +515,7 @@ public class Hardware extends LinearOpMode {
         }
     }
     public void updateRaise(){
-        if(!clawPulley.isBusy()){
+        if(clawPulley.getMode() == DcMotor.RunMode.RUN_TO_POSITION && !clawPulley.isBusy()){
             clawPulley.setPower(0);
             clawPulley.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
