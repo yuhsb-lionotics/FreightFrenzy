@@ -27,7 +27,7 @@ public class Hardware extends LinearOpMode {
     private double grabberPower = 0;
 
     PIDController pidRotate;
-    BNO055IMU imu;
+    private BNO055IMU imu;
     double globalAngle, rotation;
 
     //encoder positions for clawPulley
@@ -65,6 +65,7 @@ public class Hardware extends LinearOpMode {
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
         grabber.setDirection(DcMotor.Direction.REVERSE);
+        carousel.setDirection(DcMotor.Direction.FORWARD);
 
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -124,6 +125,10 @@ public class Hardware extends LinearOpMode {
 
         telemetry.addData("Status:", "IMU Setup Complete");
         telemetry.update();
+    }
+
+    public Orientation getIMUOrientation() {
+        return this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
     public void rotate(int degrees, double power, boolean reset) {
@@ -196,7 +201,7 @@ public class Hardware extends LinearOpMode {
 
     private void resetAngle()
     {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        lastAngles = getIMUOrientation();
 
         globalAngle = 0;
     }
@@ -212,7 +217,7 @@ public class Hardware extends LinearOpMode {
         // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
         // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
 
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = getIMUOrientation();
 
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
@@ -228,7 +233,7 @@ public class Hardware extends LinearOpMode {
         return globalAngle;
     }
     public String getAllAngles(){
-        Orientation angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = getIMUOrientation();
         return "Z: " + angles.firstAngle + " Y: " + angles.secondAngle + " X: " + angles.thirdAngle;
     }
 
