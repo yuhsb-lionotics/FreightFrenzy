@@ -17,6 +17,7 @@ public class AutoWarehouseBlue extends Hardware {
     public OpenCvDetector.ElementLocation elementLocation = OpenCvDetector.ElementLocation.ERROR;
     double angleToTurnTo, angleThatis = 0;
     int diff;
+    ParkingPosition parkingPosition = ParkingPosition.WAREHOUSE_TOWARDS_SHARED_HUB;
 
     @Override
     public void runOpMode(){

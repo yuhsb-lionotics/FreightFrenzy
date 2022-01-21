@@ -35,6 +35,7 @@ public class Hardware extends LinearOpMode {
     public static final int  LOW_POSITION =  770;
     public static final int  MIDDLE_POSITION =  1680;
     public static final int  HIGH_POSITION =  3470;
+    public static final int  SHARED_HUB_POSITION = 770; //@TODO: check this value
 
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // CHECK THIS
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
@@ -131,6 +132,21 @@ public class Hardware extends LinearOpMode {
         return this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
+    //test to see if this works
+    public void rotateToPos(double degrees, double power) {
+        pidRotate.reset();
+        pidRotate.setSetpoint(degrees);
+        pidRotate.setInputRange(0, 360);
+        pidRotate.setOutputRange(0, power);
+        pidRotate.setTolerance(0.5);
+        pidRotate.setContinuous();
+        pidRotate.enable();
+        pidRotate.performPID();
+        while(opModeIsActive() && !pidRotate.onTarget()) {
+            power = pidRotate.performPID(getIMUOrientation().firstAngle);
+        }
+    }
+
     public void rotate(int degrees, double power, boolean reset) {
         // restart imu angle tracking.
         if(reset) { resetAngle(); }
@@ -152,9 +168,9 @@ public class Hardware extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
-        pidRotate.setInputRange(0, degrees);
+        pidRotate.setInputRange(0, 360);
         pidRotate.setOutputRange(0, power);
-        pidRotate.setTolerance(1.0);
+        pidRotate.setTolerance(0.5);
         pidRotate.enable();
 
         // getAngle() returns + when rotating counter clockwise (left) and - when rotating
@@ -498,12 +514,16 @@ public class Hardware extends LinearOpMode {
         motor.setPower(0);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
+    //send the pulley to a specific height
     public void raiseClawPos(int pos, double power){
 //        encoderToSpecificPos(clawPulley, pos, power);
         clawPulley.setTargetPosition(pos);
         clawPulley.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         clawPulley.setPower(power);
     }
+
+    //send the pulley to a specific height, and wait for it to reach that height
     public void raiseClawPosAndStop(int pos, double power){
 //        encoderToSpecificPos(clawPulley, pos, power);
         clawPulley.setTargetPosition(pos);

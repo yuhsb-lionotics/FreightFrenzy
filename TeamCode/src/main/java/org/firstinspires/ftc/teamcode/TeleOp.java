@@ -37,25 +37,47 @@ public class TeleOp extends Hardware{
                 }
             }
 
-            telemetry.addData("maxDrivingPower", maxDrivingPower);
-            tankControl(maxDrivingPower);
+            //driving
+            if(gamepad1.dpad_up) {
+                //move forward
+                setPowers(0.3,0.3,0.3,0.3);
+            } else if (gamepad1.dpad_down) {
+                //move backward
+                setPowers(-0.3,-0.3,-0.3,-0.3);
+            } else if (gamepad1.dpad_right) {
+                //rotate in a circle around the shipping hub
+                double MAX_POWER = 0.5;
+                //@TODO: adjust the following value. It should be a little too wide on purpose
+                double POWER_RATIO = 0.6; //larger for a wider circle
+                setPowers(POWER_RATIO * MAX_POWER, -POWER_RATIO * MAX_POWER, -MAX_POWER, MAX_POWER);
+            } else if (gamepad1.dpad_left) {
+                //rotate in a circle around the shipping hub
+                double MAX_POWER = 0.5;
+                double POWER_RATIO = 0.6; //larger for a wider circle
+                setPowers(-POWER_RATIO * MAX_POWER, POWER_RATIO * MAX_POWER, MAX_POWER, -MAX_POWER);
+            } else if (gamepad1.right_bumper) {
+                //rotate clockwise in place
+                setPowers(0.3,-0.3,0.3,-0.3);
+            } else if (gamepad1.left_bumper) {
+                //rotate cc in place
+                setPowers(-0.3,0.3,-0.3,0.3);
+            } else {
+                telemetry.addData("tank control maxDrivingPower", maxDrivingPower);
+                tankControl(maxDrivingPower);
+            }
 
             //turn grabbing on/off when button A is pressed
-            if(gamepad2a.isNewlyPressed()) {
+            if(gamepad2a.isNewlyPressed() || gamepad1a.isNewlyPressed()) {
                 if(tryingToGrab) stopGrabbing();
-                else startGrabbing(0.5);
-            } else if (gamepad1a.isNewlyPressed()) {
-                if (tryingToGrab) stopGrabbing();
                 else startGrabbing(0.5);
             }
 
             //check if grabbing needs to be stopped, and stop if so
             updateGrabbing();
-            // check if pulley needs stopping
-//            updateRaise();
 
             // Eject the cube if b is pressed
-            if((gamepad1.b || gamepad2.b) && !tryingToGrab){
+            if((gamepad1.b || gamepad2.b)) {
+                if (tryingToGrab) stopGrabbing();
                 grabber.setPower(-0.9);
             } else if (!tryingToGrab){
                 grabber.setPower(0);
@@ -74,25 +96,12 @@ public class TeleOp extends Hardware{
                 //raise claw to highest level of shipping hub
                 raiseClawPos(HIGH_POSITION,0.7);
             } else if (gamepad2.dpad_right) {
-               raiseClawPos(0, 0.6);
-            } else if (gamepad1.dpad_up) {
-                clawPulley.setPower(0.6);
-                sleep(50);
-            } else if (gamepad1.dpad_down) {
-                clawPulley.setPower(-0.7);
-            } else if (gamepad1.dpad_left) {
-                //raise claw to highest level of shipping hub
-                raiseClawPos(HIGH_POSITION,0.7);
-            } else if (gamepad1.dpad_right) {
-                raiseClawPos(0, 0.6);
+                raiseClawPos(SHARED_HUB_POSITION, 0.6);
             } else if(!clawPulley.isBusy()){
                 clawPulley.setPower(0);
             }
             //stop the claw pulley if it's at its destination
-            if(clawPulley.getMode() == DcMotor.RunMode.RUN_TO_POSITION && !clawPulley.isBusy()) {
-                clawPulley.setPower(0);
-                clawPulley.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
+            updateRaise();
 
             //control carousel
             if (gamepad2.x) {
