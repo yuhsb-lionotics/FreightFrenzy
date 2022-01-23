@@ -104,7 +104,6 @@ public class Auto extends Hardware {
 
         raiseClawPos(2600,0.6);
         encoderDrive(0.6, 6,6,6,6);
-        // TODO: Release claw here
         encoderDrive(0.6, -6,-6,-6,-6);
         encoderDrive(0.6, -10.5,-10.5,-10.5,-10.5);
 

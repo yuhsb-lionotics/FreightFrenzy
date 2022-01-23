@@ -16,20 +16,16 @@ import java.util.ArrayList;
 
 public class Hardware extends LinearOpMode {
 
-
     // Good Luck!
     //You should put constants here
-
     protected DcMotor frontLeft, frontRight, backLeft, backRight, clawPulley, carousel ;
     protected CRServo grabber;
     protected TouchSensor wheelTouchSensor;
     public boolean tryingToGrab = false;
     private double grabberPower = 0;
-
     PIDController pidRotate;
     private BNO055IMU imu;
     double globalAngle, rotation;
-
     //encoder positions for clawPulley
     //3500 for top, 1700 for middle, 7700 for low, 0 for ground
     public static final int  LOW_POSITION =  770;
@@ -45,7 +41,6 @@ public class Hardware extends LinearOpMode {
 
     public ElapsedTime runtime = new ElapsedTime();
     Orientation lastAngles = new Orientation();
-
 
     // Setup your drivetrain (Define your motors etc.)
     public void hardwareSetup() {
@@ -97,7 +92,10 @@ public class Hardware extends LinearOpMode {
     }
 
     public void imuSetup() {
-
+        // Retrieve and initialize the IMU. The IMU is expected to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "IMU",
+        // and named "imu".
+        // This is built in to Control Hubs and Expansion Hubs, and should be in the config by default
         telemetry.addData("Status","Setting Up IMU");
         telemetry.update();
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -105,20 +103,17 @@ public class Hardware extends LinearOpMode {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-//        imu = hardwareMap.get(BNO055IMU.class, "imu");
-//        imu = hardwareMap.i2cDevice.get("imu");
         imu = hardwareMap.get(BNO055IMU.class,"imu");
         imu.initialize(parameters);
 
-        // Create a pid controller with some guess values
+
+        // TODO: PID Tuning! Everybody's favorite!
+        // Create a pid controller
         pidRotate = new PIDController(.01, 0, 0);
 
+        // make sure the imu gyro is calibrated before continuing.
         telemetry.addData("Status","Calibrating Gyro");
         telemetry.update();
-        // make sure the imu gyro is calibrated before continuing.
         while (!isStopRequested() && !imu.isGyroCalibrated()) {
             sleep(50);
             idle();
@@ -132,7 +127,7 @@ public class Hardware extends LinearOpMode {
         return this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
-    //test to see if this works
+    //TODO: test to see if this works
     public void rotateToPos(double degrees, double power) {
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
@@ -248,24 +243,12 @@ public class Hardware extends LinearOpMode {
 
         return globalAngle;
     }
-    public String getAllAngles(){
-        Orientation angles = getIMUOrientation();
-        return "Z: " + angles.firstAngle + " Y: " + angles.secondAngle + " X: " + angles.thirdAngle;
-    }
 
-
-    public void rotateClockwise(double power) {
-        frontLeft.setPower(power);
-        backLeft.setPower(power);
-        frontRight.setPower(-power);
-        backRight.setPower(-power);
-    }
     public void setPowers(double frontLeftP, double frontRightP, double backLeftP, double backRightP){
         frontLeft.setPower(frontLeftP);
         frontRight.setPower(frontRightP);
         backLeft.setPower(backLeftP);
         backRight.setPower(backRightP);
-
     }
 
     public void strafe(double forwardLeftPower, double forwardRightPower) {
@@ -279,7 +262,6 @@ public class Hardware extends LinearOpMode {
     }
     public void strafeRight(final double power) { strafe(-power, power); }
 
-
     public void encoderDrive(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){
         // stop and reset the encoders? Maybe not. Might want to get position and add from there
         double newFRTarget;
@@ -288,8 +270,8 @@ public class Hardware extends LinearOpMode {
         double newBRTarget;
 
         if (opModeIsActive()){
-            //calculate and set target positions
 
+            //calculate and set target positions
             newFRTarget = frontRight.getCurrentPosition()     +  (frontRightInches * COUNTS_PER_INCH);
             newFLTarget = frontLeft.getCurrentPosition()     +  (frontLeftInches * COUNTS_PER_INCH);
             newBLTarget = backLeft.getCurrentPosition()     +  (backLeftInches * COUNTS_PER_INCH);
@@ -327,8 +309,6 @@ public class Hardware extends LinearOpMode {
                 if(!frontLeft.isBusy()){
                     frontLeft.setPower(0);
                     frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
                 }
                 if(!backRight.isBusy()){
                     backRight.setPower(0);
@@ -340,8 +320,8 @@ public class Hardware extends LinearOpMode {
                     backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
                 }
-
             }
+
             // Set Zero Power
             frontRight.setPower(0);
             frontLeft.setPower(0);
@@ -354,8 +334,6 @@ public class Hardware extends LinearOpMode {
             backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-
-
     }
 
     public void encoderDriveAnd(double maxPower, double frontRightInches, double frontLeftInches, double backLeftInches, double backRightInches){

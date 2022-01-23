@@ -92,7 +92,6 @@ public class OpenCvDetector extends OpenCvPipeline {
             //Log.i("Item Location", String.valueOf(boundRect[i]));
             // The frame is 320 wide. For now just splitting it into three.
             // Also only accepting from the middle part of the frame, to help filter out other yellow things
-            // TODO: Tune the boundaries for the different places, and also where within the frame to not look
 
             if (boundRect[i].x < LEFT_BOUND){
                 this.location = ElementLocation.LEFT;

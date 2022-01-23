@@ -1,15 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.internal.system.Assert;
 
-@Autonomous(name="Red Carousel")
-public class AutoCarouselRed extends AutoCarouselBlue {
-    //switch left/right wheels, reverse direction of carousel,
+public class AutoWarehouseRed extends AutoWarehouseBlue{
     @Override
     public void hardwareSetup() {
         //initialize hardware devices

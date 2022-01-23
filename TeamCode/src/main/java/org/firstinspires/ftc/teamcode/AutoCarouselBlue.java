@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -9,14 +8,16 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous(name = "AutoTesting")
-public class AutoOpenCv extends Hardware {
+@Autonomous(name = "Blue Carousel")
+public class AutoCarouselBlue extends Hardware {
+
     OpenCvInternalCamera phoneCam;
     OpenCvWebcam webcam;
     OpenCvDetector pipeline = new OpenCvDetector();
     public OpenCvDetector.ElementLocation elementLocation = OpenCvDetector.ElementLocation.ERROR;
-    double angleToTurnTo, angleThatis = 0;
+    double angleToTurnTo, angleThatis,forwardInches  = 0;
     int diff;
+
     ParkingPosition parkingPosition = ParkingPosition.WAREHOUSE_TOWARDS_SHARED_HUB;
 
         @Override
@@ -59,31 +60,24 @@ public class AutoOpenCv extends Hardware {
                 // Don't burn CPU cycles busy-looping in this sample
                 sleep(100);
             }
-           // When we hit this point start has been pressed. First thing to do is save where we have the
-            // marker as being
 
+           // When we hit this point start has been pressed. First thing to do is save where we have the marker as being
             elementLocation = pipeline.getLocation();
             webcam.stopStreaming();
-            telemetry.addData("Final:", elementLocation);
+            telemetry.addData("Final location:", elementLocation);
             telemetry.update();
-
-            double forwardInches = 0;
 
             switch (elementLocation){
                 case LEFT:
-//                    raiseClawPosAndStop(LOW_POSITION, 0.7);
                     raiseClawPos(LOW_POSITION,0.7);
                     forwardInches = 1;
                     break;
                 case MIDDLE:
-//                    raiseClawPosAndStop(MIDDLE_POSITION, 0.7);
                     raiseClawPos(MIDDLE_POSITION,0.7);
-
                     forwardInches = 2.5;
                     break;
                 case RIGHT:
                 case ERROR:
-//                    raiseClawPosAndStop(HIGH_POSITION, 0.7);
                     raiseClawPos(HIGH_POSITION,0.7);
                     forwardInches = 3;
                     break;
@@ -93,30 +87,27 @@ public class AutoOpenCv extends Hardware {
             encoderDrive(0.6, 33, 0, 33, 0);
             //move forward a little
             encoderDriveAnd(0.3, forwardInches,  forwardInches, forwardInches, forwardInches);
-
             while(clawPulley.isBusy()) {
                 telemetry.addData("Status","waiting for clawPulley");
                 telemetry.update();
                 idle();
             }
-            telemetry.addData("Status","releasing pre-load box");
-            telemetry.update();
 
             //release the pre-load box
+            telemetry.addData("Status","releasing pre-load box");
+            telemetry.update();
             grabber.setPower(-1);
             sleep(1000);
             grabber.setPower(0);
-            telemetry.update();
+
+
             // move back
-
+            telemetry.addData("Status","Going to Carousel");
+            telemetry.update();
             encoderDriveAnd(0.8, -(14.5 +forwardInches), -(14.5 +forwardInches), -(14.5 +forwardInches), -(14.5 +forwardInches));
-
-
-
-            // Go to carousel
-            // TODO: Make optional!
             rotate(90,1, false);
-            // Note orientation so we can move rotate back if needed @TODO: change this to absolute rather than relative
+            // Note orientation so we can move rotate back if needed
+            // @TODO: change this to absolute rather than relative
             angleToTurnTo = getAngle();
             telemetry.addData("AngleToTurnTo",angleToTurnTo);
             telemetry.update();
@@ -124,15 +115,20 @@ public class AutoOpenCv extends Hardware {
             encoderDriveAnd(0.8,-32,-32,-32,-32);
             //approach the carousel diagonally
             encoderDrive(0.4,0,-5,0,-5);
+
+
             // Spin duck
+            telemetry.addData("Status","Spinning Duck");
+            telemetry.update();
             carousel.setPower(-1);
             sleep(3000);
             carousel.setPower(0);
 
             // GO TO WAREHOUSE:
             // move away from the carousel
+            telemetry.addData("Status","Parking in " + parkingPosition);
+            telemetry.update();
             encoderDriveAnd(0.8,3,3,3,3);
-//            rotate(90,0.7,false);
             angleThatis = getAngle();
             diff = -(int) Math.round((angleThatis - angleToTurnTo) * 1000 ) / 1000;
             telemetry.addData("Diff",diff);
