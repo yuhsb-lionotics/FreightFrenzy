@@ -53,7 +53,6 @@ public class AutoForDinner extends Hardware {
             elementLocation = pipeline.getLocation();
             telemetry.addData("Realtime analysis", elementLocation);
             telemetry.addData("Frame Count", webcam.getFrameCount());
-            telemetry.addData("high", HIGH_POSITION);
             telemetry.update();
 
             // Don't burn CPU cycles busy-looping in this sample
