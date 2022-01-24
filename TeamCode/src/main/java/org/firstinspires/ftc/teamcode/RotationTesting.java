@@ -8,7 +8,9 @@ public class RotationTesting extends Hardware{
     public void runOpMode() throws InterruptedException {
         hardwareSetup();
         imuSetup();
-        waitForStart();
+        while(!isStopRequested() && !isStarted()) {
+            telemetry.addData("orientation",getIMUOrientation());
+        }
         rotate(90,0.6,true);
     }
 }

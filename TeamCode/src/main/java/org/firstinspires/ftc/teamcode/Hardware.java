@@ -177,23 +177,23 @@ public class Hardware extends LinearOpMode {
             // On right turn we have to get off zero first.
             while (opModeIsActive() && getAngle() == 0) {
 
-                setPowers(power, -power, power, -power);
+                setDrivingPowers(power, -power, power, -power);
                 sleep(100);
             }
 
             do {
                 power = pidRotate.performPID(getAngle()); // power will be - on right turn.
-                setPowers(-power, power, -power, power);
+                setDrivingPowers(-power, power, -power, power);
             } while (opModeIsActive() && !pidRotate.onTarget());
         } else    // left turn.
             do {
                 power = pidRotate.performPID(getAngle()); // power will be + on left turn.
 
-                setPowers(-power, power, -power, power);
+                setDrivingPowers(-power, power, -power, power);
             } while (opModeIsActive() && !pidRotate.onTarget());
 
         // turn the motors off.
-        setPowers(0, 0, 0, 0);
+        setDrivingPowers(0, 0, 0, 0);
 
         rotation = getAngle();
 
@@ -244,7 +244,7 @@ public class Hardware extends LinearOpMode {
         return globalAngle;
     }
 
-    public void setPowers(double frontLeftP, double frontRightP, double backLeftP, double backRightP){
+    public void setDrivingPowers(double frontLeftP, double frontRightP, double backLeftP, double backRightP){
         frontLeft.setPower(frontLeftP);
         frontRight.setPower(frontRightP);
         backLeft.setPower(backLeftP);

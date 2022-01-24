@@ -40,27 +40,27 @@ public class TeleOp extends Hardware{
             //driving
             if(gamepad1.dpad_up) {
                 //move forward
-                setPowers(0.3,0.3,0.3,0.3);
+                setDrivingPowers(0.2,0.2,0.2,0.2);
             } else if (gamepad1.dpad_down) {
                 //move backward
-                setPowers(-0.3,-0.3,-0.3,-0.3);
+                setDrivingPowers(-0.2,-0.2,-0.2,-0.2);
             } else if (gamepad1.dpad_right) {
                 //rotate in a circle around the shipping hub
-                double MAX_POWER = 0.5;
+                double MAX_POWER = 0.6;
                 //@TODO: adjust the following value. It should be a little too wide on purpose
-                double POWER_RATIO = 0.6; //larger for a wider circle
-                setPowers(POWER_RATIO * MAX_POWER, -POWER_RATIO * MAX_POWER, -MAX_POWER, MAX_POWER);
+                double POWER_RATIO = 0.45; //larger for a wider circle
+                setDrivingPowers(POWER_RATIO * MAX_POWER, -POWER_RATIO * MAX_POWER, -MAX_POWER, MAX_POWER);
             } else if (gamepad1.dpad_left) {
                 //rotate in a circle around the shipping hub
-                double MAX_POWER = 0.5;
-                double POWER_RATIO = 0.6; //larger for a wider circle
-                setPowers(-POWER_RATIO * MAX_POWER, POWER_RATIO * MAX_POWER, MAX_POWER, -MAX_POWER);
+                double MAX_POWER = 0.6;
+                double POWER_RATIO = 0.45; //larger for a wider circle
+                setDrivingPowers(-POWER_RATIO * MAX_POWER, POWER_RATIO * MAX_POWER, MAX_POWER, -MAX_POWER);
             } else if (gamepad1.right_bumper) {
                 //rotate clockwise in place
-                setPowers(0.3,-0.3,0.3,-0.3);
+                setDrivingPowers(0.2,-0.2,0.2,-0.2);
             } else if (gamepad1.left_bumper) {
                 //rotate cc in place
-                setPowers(-0.3,0.3,-0.3,0.3);
+                setDrivingPowers(-0.2,0.2,-0.2,0.2);
             } else {
                 telemetry.addData("tank control maxDrivingPower", maxDrivingPower);
                 tankControl(maxDrivingPower);
@@ -96,7 +96,7 @@ public class TeleOp extends Hardware{
                 //raise claw to highest level of shipping hub
                 raiseClawPos(HIGH_POSITION,0.7);
             } else if (gamepad2.dpad_right) {
-                raiseClawPos(SHARED_HUB_POSITION, 0.6);
+                raiseClawPos(0, 0.6);
             } else if(!clawPulley.isBusy()){
                 clawPulley.setPower(0);
             }
