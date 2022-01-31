@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -21,6 +22,7 @@ public class Hardware extends LinearOpMode {
     protected DcMotor frontLeft, frontRight, backLeft, backRight, clawPulley, carousel ;
     protected CRServo grabber;
     protected TouchSensor wheelTouchSensor;
+    protected Servo lift;
     public boolean tryingToGrab = false;
     private double grabberPower = 0;
     PIDController pidRotate;
@@ -54,6 +56,7 @@ public class Hardware extends LinearOpMode {
         grabber = hardwareMap.crservo.get("grabber");
         carousel = hardwareMap.dcMotor.get("carousel");
         wheelTouchSensor = hardwareMap.touchSensor.get("wheel");
+        lift = hardwareMap.servo.get("lift");
 
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);

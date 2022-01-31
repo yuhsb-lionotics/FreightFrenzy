@@ -116,10 +116,17 @@ public class TeleOp extends Hardware{
                 carousel.setPower(0);
             }
 
+            if(gamepad1.start){
+                lift.setPosition(0.3);
+            } else{
+                lift.setPosition(0.8);
+            }
+
             telemetry.addData("ClawPos", clawPos);
             telemetry.addData("clawPulley mode", clawPulley.getMode());
             telemetry.addData("clawPulley position", clawPulley.getCurrentPosition());
             telemetry.addData("clawPulley power", clawPulley.getPower());
+            telemetry.addData("lift pos",lift.getPosition());
             telemetry.update();
             }
         }
