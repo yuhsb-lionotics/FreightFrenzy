@@ -48,12 +48,12 @@ public class TeleOp extends Hardware{
                 //rotate in a circle around the shipping hub
                 double MAX_POWER = 0.6;
                 //@TODO: adjust the following value. It should be a little too wide on purpose
-                double POWER_RATIO = 0.45; //larger for a wider circle
+                double POWER_RATIO = 0.4; //larger for a wider circle
                 setDrivingPowers(POWER_RATIO * MAX_POWER, -POWER_RATIO * MAX_POWER, -MAX_POWER, MAX_POWER);
             } else if (gamepad1.dpad_left) {
                 //rotate in a circle around the shipping hub
                 double MAX_POWER = 0.6;
-                double POWER_RATIO = 0.45; //larger for a wider circle
+                double POWER_RATIO = 0.4; //larger for a wider circle
                 setDrivingPowers(-POWER_RATIO * MAX_POWER, POWER_RATIO * MAX_POWER, MAX_POWER, -MAX_POWER);
             } else if (gamepad1.right_bumper) {
                 //rotate clockwise in place

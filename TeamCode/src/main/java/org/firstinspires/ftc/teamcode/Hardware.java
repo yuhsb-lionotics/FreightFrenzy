@@ -113,7 +113,8 @@ public class Hardware extends LinearOpMode {
 
         // TODO: PID Tuning! Everybody's favorite!
         // Create a pid controller
-        pidRotate = new PIDController(.02, 0, 0);
+//        pidRotate = new PIDController(.02, 0, 0);
+        pidRotate = new PIDController(.003, .00003, 0);
 
         // make sure the imu gyro is calibrated before continuing.
         telemetry.addData("Status","Calibrating Gyro");
