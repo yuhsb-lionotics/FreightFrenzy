@@ -14,10 +14,10 @@ public class RotationTesting extends Hardware{
         }
         telemetry.addData("status","rotating");
         telemetry.update();
-        rotate(-5,0.6,true);
+        rotateToPos(getHeading() + 90, 0.6);
         telemetry.addData("orientation",getIMUOrientation());
         telemetry.addData("pid setpoint", pidRotate.getSetpoint());
-        telemetry.addData("current angle", getAngle());
+        telemetry.addData("current angle", getHeading());
         telemetry.addData("pid error (setpoint minus current angle)", pidRotate.getError());
         telemetry.update();
         sleep(3000);

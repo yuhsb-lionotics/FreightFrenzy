@@ -42,7 +42,8 @@ public class Hardware extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * Math.PI);
 
     public ElapsedTime runtime = new ElapsedTime();
-    Orientation lastAngles = new Orientation();
+    float lastAngle = 0;
+
 
     // Setup your drivetrain (Define your motors etc.)
     public void hardwareSetup() {
@@ -112,7 +113,7 @@ public class Hardware extends LinearOpMode {
 
         // TODO: PID Tuning! Everybody's favorite!
         // Create a pid controller
-        pidRotate = new PIDController(.005, 0, 0);
+        pidRotate = new PIDController(.02, 0, 0);
 
         // make sure the imu gyro is calibrated before continuing.
         telemetry.addData("Status","Calibrating Gyro");
@@ -130,19 +131,25 @@ public class Hardware extends LinearOpMode {
         return this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
+    public float getHeading() {
+        return this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+    }
+
     //TODO: test to see if this works
     public void rotateToPos(double degrees, double power) {
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
-        pidRotate.setInputRange(0, 360);
+        pidRotate.setInputRange(0, 180);
         pidRotate.setOutputRange(0, power);
         pidRotate.setTolerance(0.5);
-        pidRotate.setContinuous();
+        //pidRotate.setContinuous();
         pidRotate.enable();
         pidRotate.performPID();
         while(opModeIsActive() && !pidRotate.onTarget()) {
-            power = pidRotate.performPID(getIMUOrientation().firstAngle);
+            power = pidRotate.performPID(getHeading());
+            setDrivingPowers(-power, power, -power, power);
         }
+        setDrivingPowers(0,0,0,0);
     }
 
     public void rotate(int degrees, double power, boolean reset) {
@@ -166,7 +173,7 @@ public class Hardware extends LinearOpMode {
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); */
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
-        pidRotate.setInputRange(0, 360);
+        pidRotate.setInputRange(0, 180);
         pidRotate.setOutputRange(0, power);
         pidRotate.setTolerance(0.5);
         pidRotate.enable();
@@ -216,7 +223,7 @@ public class Hardware extends LinearOpMode {
 
     private void resetAngle()
     {
-        lastAngles = getIMUOrientation();
+        lastAngle = getHeading();
 
         globalAngle = 0;
     }
@@ -232,9 +239,9 @@ public class Hardware extends LinearOpMode {
         // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
         // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
 
-        Orientation angles = getIMUOrientation();
+        float heading = getHeading();
 
-        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+        double deltaAngle = heading - lastAngle;
 
         if (deltaAngle < -180)
             deltaAngle += 360;
@@ -243,7 +250,7 @@ public class Hardware extends LinearOpMode {
 
         globalAngle += deltaAngle;
 
-        lastAngles = angles;
+        lastAngle = heading;
 
         return globalAngle;
     }

@@ -48,7 +48,7 @@ public class OpenCvDetector extends OpenCvPipeline {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
         if (mat.empty()) {
-            location = ElementLocation.ERROR;
+            location = ElementLocation.ERROR;//AHIHIRI
             return input;
         }
 
@@ -56,8 +56,8 @@ public class OpenCvDetector extends OpenCvPipeline {
         // We create a HSV range for yellow to detect ducks / TSE
         // NOTE: In OpenCV's implementation, Hue values are half the real value
         // Use an HSV color picker for a different color.
-        Scalar lowHSV = new Scalar(20, 100, 100); // lower bound HSV for yellow
-        Scalar highHSV = new Scalar(30, 255, 255); // higher bound HSV for yellow
+        Scalar lowHSV = new Scalar(13, 100, 100); // lower bound HSV for yellow
+        Scalar highHSV = new Scalar(15, 255, 255); // higher bound HSV for yellow
 
 
         // Narrow down the image to the part where we are actually looking for stuff.

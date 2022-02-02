@@ -71,4 +71,9 @@ public class AutoWarehouseRed extends AutoWarehouseBlue{
                 -actualOrientation.firstAngle, actualOrientation.secondAngle, actualOrientation.thirdAngle, System.nanoTime());
         return reversedOrientation;
     }
+
+    @Override
+    public float getHeading() {
+        return -super.getHeading();
+    }
 }
