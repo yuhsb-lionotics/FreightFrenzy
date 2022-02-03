@@ -3,10 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.internal.system.Assert;
-
 @Autonomous(name="Red Carousel")
 public class AutoCarouselRed extends AutoCarouselBlue {
     //switch left/right wheels, reverse direction of carousel,
@@ -58,20 +54,9 @@ public class AutoCarouselRed extends AutoCarouselBlue {
         telemetry.update();
     }
 
-    //instead of giving the actual orientation as measured by the IMU, reverse the Z value
     @Override
-    public Orientation getIMUOrientation() {
-        //measure the orientation using the gyroscope
-        Orientation actualOrientation = super.getIMUOrientation();
-        //check the axes order
-        Assert.assertTrue(actualOrientation.axesOrder == AxesOrder.ZYX);
-        /*construct an orientation with the first angle reversed
-        @ TODO: mathematically, one of the other angles should be reversed too.
-        We never use them anyway though so it doesn't really matter. If so, we should replace
-        getIMUOrientation with getIMUFirstAngle() and the overriding method will be much simpler. */
-        Orientation reversedOrientation = new Orientation(actualOrientation.axesReference,
-                actualOrientation.axesOrder, actualOrientation.angleUnit,
-                -actualOrientation.firstAngle, actualOrientation.secondAngle, actualOrientation.thirdAngle, System.nanoTime());
-        return reversedOrientation;
+    public float getHeading() {
+        return -super.getHeading();
     }
+
 }

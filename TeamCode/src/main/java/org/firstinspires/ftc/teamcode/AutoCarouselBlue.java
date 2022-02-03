@@ -19,7 +19,7 @@ public class AutoCarouselBlue extends Hardware {
     OpenCvWebcam webcam;
     OpenCvDetector pipeline = new OpenCvDetector();
     public OpenCvDetector.ElementLocation elementLocation = OpenCvDetector.ElementLocation.ERROR;
-    double angleToTurnTo, angleThatis,forwardInches  = 0;
+    double forwardInches  = 0;
     int diff;
     int delay = 0;
     public ParkingPosition pos = ParkingPosition.STORAGE_UNIT;
@@ -117,10 +117,6 @@ public class AutoCarouselBlue extends Hardware {
             telemetry.update();
             encoderDriveAnd(0.8, -(13.5 +forwardInches), -(13.5 +forwardInches), -(13.5 +forwardInches), -(13.5 +forwardInches));
             rotateToPos(90, 1);
-            // Note orientation so we can move rotate back if needed
-            angleToTurnTo = getAngle();
-            telemetry.addData("AngleToTurnTo",angleToTurnTo);
-            telemetry.update();
             raiseClawPos(LOW_POSITION,0.6);
             encoderDriveAnd(0.8,-32,-32,-32,-32);
             double before = getHeading();

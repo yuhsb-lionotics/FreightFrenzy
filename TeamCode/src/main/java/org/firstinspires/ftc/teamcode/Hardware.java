@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.ArrayList;
 
@@ -124,10 +123,6 @@ public class Hardware extends LinearOpMode {
         telemetry.update();
     }
 
-    public Orientation getIMUOrientation() {
-        return this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-    }
-
     public float getHeading() {
         return this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
@@ -151,33 +146,6 @@ public class Hardware extends LinearOpMode {
             setDrivingPowers(-power, power, -power, power);
         }
         setDrivingPowers(0,0,0,0);
-    }
-
-    /**
-     * Get current cumulative angle rotation from last reset.
-     * @return Angle in degrees. + = left, - = right from zero point.
-     */
-    public double getAngle()
-    {
-        // This is assuming that we want the Z axis for the angle. If that's not true then change this.
-        // We have to process the angle because the imu works in euler angles so the Z axis is
-        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
-        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
-
-        float heading = getHeading();
-
-        double deltaAngle = heading - lastAngle;
-
-        if (deltaAngle < -180)
-            deltaAngle += 360;
-        else if (deltaAngle > 180)
-            deltaAngle -= 360;
-
-        globalAngle += deltaAngle;
-
-        lastAngle = heading;
-
-        return globalAngle;
     }
 
     public void setDrivingPowers(double frontLeftP, double frontRightP, double backLeftP, double backRightP){

@@ -15,7 +15,6 @@ public class AutoWarehouseBlue extends Hardware {
     OpenCvWebcam webcam;
     OpenCvDetector pipeline = new OpenCvDetector();
     public OpenCvDetector.ElementLocation elementLocation = OpenCvDetector.ElementLocation.ERROR;
-    double angleToTurnTo, angleThatis = 0;
     int diff;
     ParkingPosition parkingPosition = ParkingPosition.WAREHOUSE_TOWARDS_SHARED_HUB;
 
@@ -115,10 +114,6 @@ public class AutoWarehouseBlue extends Hardware {
 
         // Park in Warehouse
         rotateToPos(-90,1);
-        // Note orientation so we can move rotate back if needed @TODO: change this to absolute rather than relative
-        angleToTurnTo = getAngle();
-        telemetry.addData("AngleToTurnTo",angleToTurnTo);
-        telemetry.update();
         raiseClawPos(LOW_POSITION,0.6);
         encoderDrive(0.6,35,35,35,35);
         encoderDrive(0.6,-15,15,-15,15);
