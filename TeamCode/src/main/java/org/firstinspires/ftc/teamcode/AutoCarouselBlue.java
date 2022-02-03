@@ -20,13 +20,8 @@ public class AutoCarouselBlue extends Hardware {
     OpenCvDetector pipeline = new OpenCvDetector();
     public OpenCvDetector.ElementLocation elementLocation = OpenCvDetector.ElementLocation.ERROR;
     double forwardInches  = 0;
-    int diff;
     int delay = 0;
-    public ParkingPosition pos = ParkingPosition.STORAGE_UNIT;
-
-
-
-    ParkingPosition parkingPosition = ParkingPosition.WAREHOUSE_TOWARDS_SHARED_HUB;
+    public ParkingPosition parkingPosition = ParkingPosition.WAREHOUSE_JUST_INSIDE;
 
         @Override
         public void runOpMode(){
@@ -64,7 +59,7 @@ public class AutoCarouselBlue extends Hardware {
                 telemetry.addData("Realtime analysis", elementLocation);
                 telemetry.addData("Frame Count", webcam.getFrameCount());
                 telemetry.addData("Selected Delay",delay);
-                telemetry.addData("Selected Parking Position",pos);
+                telemetry.addData("Selected Parking Position", parkingPosition);
                 telemetry.update();
 
                 // Don't burn CPU cycles busy-looping in this sample
@@ -131,30 +126,33 @@ public class AutoCarouselBlue extends Hardware {
             sleep(3000);
             carousel.setPower(0);
 
-            // GO TO WAREHOUSE:
-            // move away from the carousel
-            telemetry.addData("Status","Parking in " + parkingPosition);
-            telemetry.update();
-            encoderDriveAnd(0.8,3,3,3,3);
-            telemetry.addData("current heading", getHeading());
-            telemetry.update();
-            sleep(1000);
-            telemetry.addData("status","rotating");
-            telemetry.update();
-            double newAngle = getHeading();
-            newAngle  = newAngle + before;
+            if (parkingPosition == ParkingPosition.STORAGE_UNIT) {
 
-            rotateToPos(90,1);
-            telemetry.addData("current heading", getHeading());
-            telemetry.update();
-            sleep(1000);
-            telemetry.update();
+            } else {
+                // GO TO WAREHOUSE:
+                // move away from the carousel
+                telemetry.addData("Status", "Parking in " + parkingPosition);
+                telemetry.update();
+                //this needs to move a little to the right too so the duck doesn't get in its way
+                //or Raphi can add something to stop the duck from going underneath the robot
+                encoderDriveAnd(0.8, 3, 3, 3, 3);
+
+                telemetry.addData("status", "rotating");
+                telemetry.update();
+                rotateToPos(90, 1);
+                telemetry.update();
+                double drivingInches = 75;
+                double wheelInches = drivingInches / Math.sqrt(2);
+                encoderDrive(0.6, drivingInches, drivingInches, drivingInches, drivingInches);
+            }
+            /* old code:
             //avoid sitting duck alliance partner
             encoderDrive(0.8,0,24,0,24);
             encoderDriveAnd(0.8,20,20,20,20);
-            encoderDriveAnd(0.8,24,0,24,0);
+            encoderDriveAnd(0.8,24,0,24,0); */
 
         }
+
         public void selectParameters(){
             boolean delaySelected = false;
             boolean parkingSelected = false;
@@ -189,8 +187,8 @@ public class AutoCarouselBlue extends Hardware {
                 telemetry.addData("Currently Selecting", "Parking Position");
                 telemetry.addData("Press Dpad up to raise value","Press Dpad down to lower value");
                 telemetry.addData("Press A to make final","!");
-                telemetry.addData("Current selection", pos);
-                pos = positions.get(num);
+                telemetry.addData("Current selection", parkingPosition);
+                parkingPosition = positions.get(num);
                 if(gamepad1.dpad_up){
                     if(num <= 3){
                         num++;
