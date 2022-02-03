@@ -25,7 +25,6 @@ public class Hardware extends LinearOpMode {
     protected Servo lift;
     public boolean tryingToGrab = false;
     private double grabberPower = 0;
-    PIDController pidRotate;
     private BNO055IMU imu;
     double globalAngle, rotation;
     //encoder positions for clawPulley
@@ -111,10 +110,7 @@ public class Hardware extends LinearOpMode {
         imu.initialize(parameters);
 
 
-        // TODO: PID Tuning! Everybody's favorite!
-        // Create a pid controller
-//        pidRotate = new PIDController(.02, 0, 0);
-        pidRotate = new PIDController(.003, .00003, 0);
+
 
         // make sure the imu gyro is calibrated before continuing.
         telemetry.addData("Status","Calibrating Gyro");
@@ -136,8 +132,12 @@ public class Hardware extends LinearOpMode {
         return this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 
-    //TODO: test to see if this works
     public void rotateToPos(double degrees, double power) {
+        PIDController pidRotate = new PIDController(.004, .00002, 0);
+        // TODO: PID Tuning! Everybody's favorite!
+        // Create a pid controller
+//        pidRotate = new PIDController(.02, 0, 0);
+
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
         pidRotate.setInputRange(0, 180);
@@ -151,82 +151,6 @@ public class Hardware extends LinearOpMode {
             setDrivingPowers(-power, power, -power, power);
         }
         setDrivingPowers(0,0,0,0);
-    }
-
-    public void rotate(int degrees, double power, boolean reset) {
-        // restart imu angle tracking.
-        if(reset) { resetAngle(); }
-
-        // if degrees > 359 we cap at 359 with same sign as original degrees.
-        if (Math.abs(degrees) > 359) degrees = (int) Math.copySign(359, degrees);
-
-        // start pid controller. PID controller will monitor the turn angle with respect to the
-        // target angle and reduce power as we approach the target angle. This is to prevent the
-        // robots momentum from overshooting the turn after we turn off the power. The PID controller
-        // reports onTarget() = true when the difference between turn angle and target angle is within
-        // 1% of target (tolerance) which is about 1 degree. This helps prevent overshoot. Overshoot is
-        // dependant on the motor and gearing configuration, starting power, weight of the robot and the
-        // on target tolerance. If the controller overshoots, it will reverse the sign of the output
-        // turning the robot back toward the setpoint value.
-        /* frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); */
-        pidRotate.reset();
-        pidRotate.setSetpoint(degrees);
-        pidRotate.setInputRange(0, 180);
-        pidRotate.setOutputRange(0, power);
-        pidRotate.setTolerance(0.5);
-        pidRotate.enable();
-
-        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
-        // clockwise (right).
-
-        // rotate until turn is completed.
-
-        if (degrees < 0) {
-            // On right turn we have to get off zero first.
-            while (opModeIsActive() && getAngle() == 0) {
-
-                setDrivingPowers(power, -power, power, -power);
-                sleep(100);
-            }
-
-            do {
-                power = pidRotate.performPID(getAngle()); // power will be - on right turn.
-                setDrivingPowers(-power, power, -power, power);
-            } while (opModeIsActive() && !pidRotate.onTarget());
-        } else    // left turn.
-            do {
-                power = pidRotate.performPID(getAngle()); // power will be + on left turn.
-
-                setDrivingPowers(-power, power, -power, power);
-            } while (opModeIsActive() && !pidRotate.onTarget());
-
-        // turn the motors off.
-        setDrivingPowers(0, 0, 0, 0);
-
-        rotation = getAngle();
-
-        // reset angle tracking on new heading.
-        if(reset) {
-            // wait for rotation to stop.
-            sleep(500);
-            resetAngle();
-        }
-        /*
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER); */
-    }
-
-
-    private void resetAngle()
-    {
-        lastAngle = getHeading();
-
-        globalAngle = 0;
     }
 
     /**

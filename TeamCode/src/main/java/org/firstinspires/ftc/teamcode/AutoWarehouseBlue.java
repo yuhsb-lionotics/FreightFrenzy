@@ -114,7 +114,7 @@ public class AutoWarehouseBlue extends Hardware {
 
 
         // Park in Warehouse
-        rotate(90,1, false);
+        rotateToPos(-90,1);
         // Note orientation so we can move rotate back if needed @TODO: change this to absolute rather than relative
         angleToTurnTo = getAngle();
         telemetry.addData("AngleToTurnTo",angleToTurnTo);

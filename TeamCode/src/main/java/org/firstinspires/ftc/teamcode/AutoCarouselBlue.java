@@ -115,17 +115,17 @@ public class AutoCarouselBlue extends Hardware {
             // move back
             telemetry.addData("Status","Going to Carousel");
             telemetry.update();
-            encoderDriveAnd(0.8, -(14.5 +forwardInches), -(14.5 +forwardInches), -(14.5 +forwardInches), -(14.5 +forwardInches));
-            rotate(90,1, false);
+            encoderDriveAnd(0.8, -(13.5 +forwardInches), -(13.5 +forwardInches), -(13.5 +forwardInches), -(13.5 +forwardInches));
+            rotateToPos(90, 1);
             // Note orientation so we can move rotate back if needed
-            // @TODO: change this to absolute rather than relative
             angleToTurnTo = getAngle();
             telemetry.addData("AngleToTurnTo",angleToTurnTo);
             telemetry.update();
             raiseClawPos(LOW_POSITION,0.6);
             encoderDriveAnd(0.8,-32,-32,-32,-32);
+            double before = getHeading();
             //approach the carousel diagonally
-            encoderDrive(0.4,0,-5,0,-5);
+            encoderDrive(0.4,0,-4,0,-4);
 
 
             // Spin duck
@@ -140,13 +140,19 @@ public class AutoCarouselBlue extends Hardware {
             telemetry.addData("Status","Parking in " + parkingPosition);
             telemetry.update();
             encoderDriveAnd(0.8,3,3,3,3);
-            angleThatis = getAngle();
-            diff = -(int) Math.round((angleThatis - angleToTurnTo) * 1000 ) / 1000;
-            telemetry.addData("Diff",diff);
-            telemetry.addData("AngleToTurnTo",angleToTurnTo);
-            telemetry.addData("AngleThatIs",angleThatis);
+            telemetry.addData("current heading", getHeading());
             telemetry.update();
-            rotate(diff, 0.9, true);
+            sleep(1000);
+            telemetry.addData("status","rotating");
+            telemetry.update();
+            double newAngle = getHeading();
+            newAngle  = newAngle + before;
+
+            rotateToPos(90,1);
+            telemetry.addData("current heading", getHeading());
+            telemetry.update();
+            sleep(1000);
+            telemetry.update();
             //avoid sitting duck alliance partner
             encoderDrive(0.8,0,24,0,24);
             encoderDriveAnd(0.8,20,20,20,20);
