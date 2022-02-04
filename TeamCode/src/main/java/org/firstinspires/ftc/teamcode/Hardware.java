@@ -28,9 +28,9 @@ public class Hardware extends LinearOpMode {
     double globalAngle, rotation;
     //encoder positions for clawPulley
     //3500 for top, 1700 for middle, 7700 for low, 0 for ground
-    public static final int  LOW_POSITION =  770;
-    public static final int  MIDDLE_POSITION =  1680;
-    public static final int  HIGH_POSITION =  3470;
+    public static final int  LOW_POSITION =  680; // new is 600
+    public static final int  MIDDLE_POSITION =  1800; // 1600
+    public static final int  HIGH_POSITION =  3470; //
     public static final int  SHARED_HUB_POSITION = 770; //@TODO: check this value
 
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // CHECK THIS

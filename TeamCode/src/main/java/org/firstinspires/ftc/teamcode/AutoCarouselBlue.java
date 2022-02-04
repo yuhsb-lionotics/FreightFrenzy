@@ -110,13 +110,13 @@ public class AutoCarouselBlue extends Hardware {
             // move back
             telemetry.addData("Status","Going to Carousel");
             telemetry.update();
-            encoderDriveAnd(0.8, -(13.5 +forwardInches), -(13.5 +forwardInches), -(13.5 +forwardInches), -(13.5 +forwardInches));
+            encoderDriveAnd(0.8, -(12.5 +forwardInches), -(12.5 +forwardInches), -(12.5 +forwardInches), -(12.5 +forwardInches));
             rotateToPos(90, 1);
             raiseClawPos(LOW_POSITION,0.6);
             encoderDriveAnd(0.8,-32,-32,-32,-32);
             double before = getHeading();
             //approach the carousel diagonally
-            encoderDrive(0.4,0,-4,0,-4);
+            encoderDrive(0.3,0,-4,0,-4);
 
 
             // Spin duck

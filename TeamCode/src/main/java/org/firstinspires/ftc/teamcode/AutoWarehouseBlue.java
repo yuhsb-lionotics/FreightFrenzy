@@ -71,7 +71,7 @@ public class AutoWarehouseBlue extends Hardware {
             case LEFT:
 //                    raiseClawPosAndStop(LOW_POSITION, 0.7);
                 raiseClawPos(LOW_POSITION,0.7);
-                forwardInches = 1;
+                forwardInches = 0.7;
                 break;
             case MIDDLE:
 //                    raiseClawPosAndStop(MIDDLE_POSITION, 0.7);
@@ -108,12 +108,12 @@ public class AutoWarehouseBlue extends Hardware {
         telemetry.update();
         // move back
 
-        encoderDriveAnd(0.8, -(15 +forwardInches), -(15 +forwardInches), -(15 +forwardInches), -(14.5 +forwardInches));
+        encoderDriveAnd(0.8, -(16 +forwardInches), -(16 +forwardInches), -(16 +forwardInches), -(16 +forwardInches));
 
 
 
         // Park in Warehouse
-        rotateToPos(-90,1);
+        rotateToPos(90,1);
         raiseClawPos(LOW_POSITION,0.6);
         encoderDrive(0.6,35,35,35,35);
         encoderDrive(0.6,-15,15,-15,15);
