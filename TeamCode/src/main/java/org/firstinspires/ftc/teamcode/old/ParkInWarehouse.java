@@ -1,7 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.old;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.teamcode.Hardware;
+
+@Disabled
 @Autonomous(name="Park In Warehouse Red")
 public class ParkInWarehouse extends Hardware {
     @Override

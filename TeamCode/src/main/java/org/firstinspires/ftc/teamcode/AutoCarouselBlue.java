@@ -21,10 +21,11 @@ public class AutoCarouselBlue extends Hardware {
     public OpenCvDetector.ElementLocation elementLocation = OpenCvDetector.ElementLocation.ERROR;
     double forwardInches  = 0;
     int delay = 0;
-    public ParkingPosition parkingPosition = ParkingPosition.WAREHOUSE_JUST_INSIDE;
+    public ParkingPosition parkingPosition = ParkingPosition.STORAGE_UNIT;
 
         @Override
         public void runOpMode(){
+            selectParameters();
             int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
             webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
             webcam.setPipeline(pipeline);
@@ -52,7 +53,6 @@ public class AutoCarouselBlue extends Hardware {
              * The INIT-loop:
              * This REPLACES waitForStart!
              */
-
             while (!isStarted() && !isStopRequested())
             {
                 elementLocation = pipeline.getLocation();
@@ -90,15 +90,15 @@ public class AutoCarouselBlue extends Hardware {
             }
             //@TODO: combine these two driving commands
             //move diagonally towards the Shipping Hub
-            encoderDrive(0.6, 33, 0, 33, 0);
-            //move forward a little
-            encoderDriveAnd(0.3, forwardInches,  forwardInches, forwardInches, forwardInches);
+            encoderDrive(0.8, 33, 0, 33, 0);
             while(clawPulley.isBusy()) {
                 telemetry.addData("Status","waiting for clawPulley");
                 telemetry.update();
                 idle();
             }
 
+            //move forward a little
+            encoderDriveAnd(0.3, forwardInches,  forwardInches, forwardInches, forwardInches);
             //release the pre-load box
             telemetry.addData("Status","releasing pre-load box");
             telemetry.update();
@@ -126,88 +126,115 @@ public class AutoCarouselBlue extends Hardware {
             sleep(3000);
             carousel.setPower(0);
 
-            if (parkingPosition == ParkingPosition.STORAGE_UNIT) {
 
-            } else {
-                // GO TO WAREHOUSE:
-                // move away from the carousel
-                telemetry.addData("Status", "Parking in " + parkingPosition);
-                telemetry.update();
-                //this needs to move a little to the right too so the duck doesn't get in its way
-                //or Raphi can add something to stop the duck from going underneath the robot
-                encoderDriveAnd(0.8, 3, 3, 3, 3);
+            // GO TO Storage unit:
+            // move away from the carousel
+            telemetry.addData("Status", "Parking in " + parkingPosition);
+            telemetry.update();
+            //this needs to move a little to the right too so the duck doesn't get in its way
+            //or Raphi can add something to stop the duck from going underneath the robot
+            encoderDriveAnd(0.8, 3, 3, 3, 3);
 
-                telemetry.addData("status", "rotating");
-                telemetry.update();
-                rotateToPos(90, 1);
-                telemetry.update();
-                double drivingInches = 75;
-                double wheelInches = drivingInches / Math.sqrt(2);
-                encoderDrive(0.6, drivingInches, drivingInches, drivingInches, drivingInches);
+            telemetry.addData("status", "rotating");
+            telemetry.update();
+            rotateToPos(90, 1);
+            telemetry.update();
+
+//                double drivingInches = 75;
+//                double wheelInches = drivingInches / Math.sqrt(2);
+//                encoderDrive(0.6, drivingInches, drivingInches, drivingInches, drivingInches);
+
+            // Go to storage unit
+            if(parkingPosition == ParkingPosition.STORAGE_UNIT) {
+                encoderDriveAnd(0.8, -22, 22, -22, 22);
+                encoderDriveAnd(0.6, -5, -5, -5, -5);
             }
-            /* old code:
-            //avoid sitting duck alliance partner
-            encoderDrive(0.8,0,24,0,24);
-            encoderDriveAnd(0.8,20,20,20,20);
-            encoderDriveAnd(0.8,24,0,24,0); */
+            // When done put the pulley all the way back down so teleop starts with it at 0
+            raiseClawPosAndStop(0,0.8);
+
 
         }
 
-        public void selectParameters(){
-            boolean delaySelected = false;
-            boolean parkingSelected = false;
+    public void selectParameters(){
+        boolean delaySelected = false;
+        boolean parkingSelected = false;
+        Button dpadUp = new Button(false);
+        Button dpadDown = new Button(false);
+        Button a = new Button(false);
 
-            // Delay
-            // Parking Position
-            // Start location ?
-            while(!delaySelected){
-                telemetry.addData("Currently Selecting", "Delay");
-                telemetry.addData("Press Dpad up to raise value","Press Dpad down to lower value");
-                telemetry.addData("Press a to make final","!");
-                telemetry.addData("Current selection", delay);
-                telemetry.update();
-                if(gamepad1.dpad_up){
-                    delay++;
-                } else if(gamepad1.dpad_down){
-                    delay--;
-                } else if (gamepad1.a){
-                    delaySelected = true;
-                }
-                idle();
+        // Delay
+        // Parking Position
+        // Start location ?
+        while(!delaySelected && !isStopRequested()){
+            dpadUp.update(gamepad1.dpad_up);
+            dpadDown.update(gamepad1.dpad_down);
+            a.update(gamepad1.a);
+
+            telemetry.update();
+            if(dpadUp.isNewlyReleased()){
+                delay++;
+            } else if(dpadDown.isNewlyReleased() && delay > 0){
+                delay--;
+            } else if (a.isNewlyPressed()){
+                delaySelected = true;
+
             }
-            List<ParkingPosition> positions = new ArrayList<>();
-            positions.add(ParkingPosition.STORAGE_UNIT);
-            positions.add(ParkingPosition.WAREHOUSE_JUST_INSIDE);
-            positions.add(ParkingPosition.WAREHOUSE_TOWARDS_SHARED_HUB);
-            positions.add(ParkingPosition.WAREHOUSE_AGAINST_BACK_WALL);
-            int num = 0;
+            idle();
 
-            while(!parkingSelected){
-                telemetry.addData("Selected Delay",delay);
-                telemetry.addData("Currently Selecting", "Parking Position");
-                telemetry.addData("Press Dpad up to raise value","Press Dpad down to lower value");
-                telemetry.addData("Press A to make final","!");
-                telemetry.addData("Current selection", parkingPosition);
-                parkingPosition = positions.get(num);
-                if(gamepad1.dpad_up){
-                    if(num <= 3){
-                        num++;
-                    } else {
-                        num = 0;
-                    }
-                } else if (gamepad1.dpad_down){
-                    if(num >= 1){
-                        num--;
-                    } else {
-                        num = 3;
-                    }
-                } else if(gamepad1.a){
-                    parkingSelected = true;
-                }
-                idle();
-            }
-
+            telemetry.addData("Currently Selecting", "Delay");
+            telemetry.addData("DelaySelected",delaySelected);
+            telemetry.addData("Press Dpad up to raise value","Press Dpad down to lower value");
+            telemetry.addData("Press A to select","!");
+            telemetry.addData("Current selection", delay);
+            telemetry.update();
         }
+        List<ParkingPosition> positions = new ArrayList<>();
+        positions.add(ParkingPosition.STORAGE_UNIT);
+        positions.add(ParkingPosition.WAREHOUSE_JUST_INSIDE);
+        positions.add(ParkingPosition.WAREHOUSE_TOWARDS_SHARED_HUB);
+        positions.add(ParkingPosition.WAREHOUSE_AGAINST_BACK_WALL);
+        int num = 0;
+
+        while(!parkingSelected && !isStopRequested()){
+            dpadUp.update(gamepad1.dpad_up);
+            dpadDown.update(gamepad1.dpad_down);
+            a.update(gamepad1.a);
+
+            parkingPosition = positions.get(num);
+            if(dpadUp.isNewlyPressed()){
+                if(num < positions.size() - 1){
+                    num++;
+                } else {
+                    num = 0;
+                }
+            } else if (dpadDown.isNewlyPressed()){
+                if(num >= 1){
+                    num--;
+                } else {
+                    num = positions.size() -1 ;
+                }
+            } else if(a.isNewlyPressed()){
+                parkingSelected = true;
+            }
+
+
+
+            telemetry.addData("Selected Delay",delay);
+            telemetry.addData("Currently Selecting", "Parking Position");
+            telemetry.addData("Press Dpad up to raise value","Press Dpad down to lower value");
+            telemetry.addData("Press A to make final","!");
+            telemetry.addData("Current selection", parkingPosition);
+            telemetry.update();
+
+            idle();
+        }
+        telemetry.addData("Selected Delay",delay);
+        telemetry.addData("Selected Parking Position", parkingPosition);
+        telemetry.update();
+
+    }
+
+
 
     }
 
