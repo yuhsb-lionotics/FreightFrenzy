@@ -56,8 +56,10 @@ public class OpenCvDetector extends OpenCvPipeline {
         // We create a HSV range for orange to detect ducks / TSE
         // NOTE: In OpenCV's implementation, Hue values are half the real value
         // Use an HSV color picker for a different color.
-        Scalar lowHSV = new Scalar(13, 100, 100); // lower bound HSV for orange
-        Scalar highHSV = new Scalar(15, 255, 255); // higher bound HSV for orange
+        Scalar lowHSV = new Scalar(14.5, 70, 100); // lower bound HSV for orange
+        Scalar highHSV = new Scalar(16, 255, 255); // higher bound HSV for orange
+
+
 
 
         // Narrow down the image to the part where we are actually looking for stuff.
