@@ -82,7 +82,6 @@ public class AutoWarehouseBlue extends Hardware {
             case MIDDLE:
 //                    raiseClawPosAndStop(MIDDLE_POSITION, 0.7);
                 raiseClawPos(MIDDLE_POSITION,0.7);
-
                 forwardInches = 2.5;
                 break;
             case RIGHT:
@@ -103,7 +102,6 @@ public class AutoWarehouseBlue extends Hardware {
         }
         //move forward a little
         encoderDriveAnd(0.3, forwardInches,  forwardInches, forwardInches, forwardInches);
-
 
         telemetry.addData("Status","releasing pre-load box");
         telemetry.update();
@@ -131,7 +129,6 @@ public class AutoWarehouseBlue extends Hardware {
 
         // When done put the pulley all the way back down so teleop starts with it at 0
         raiseClawPosAndStop(0,0.8);
-
 
     }
 
@@ -196,8 +193,6 @@ public class AutoWarehouseBlue extends Hardware {
             } else if(a.isNewlyPressed()){
                 parkingSelected = true;
             }
-
-
 
             telemetry.addData("Selected Delay",delay);
             telemetry.addData("Currently Selecting", "Parking Position");
