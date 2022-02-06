@@ -117,7 +117,7 @@ public class AutoCarouselBlue extends Hardware {
             encoderDriveAnd(0.8,-32,-32,-32,-32);
             double before = getHeading();
             //approach the carousel diagonally
-            encoderDrive(0.3,0,-4,0,-4);
+            encoderDrive(0.3,0,-5,0,-5);
 
 
             // Spin duck
@@ -139,11 +139,6 @@ public class AutoCarouselBlue extends Hardware {
             telemetry.addData("status", "rotating");
             telemetry.update();
             rotateToPos(90, 1);
-            telemetry.update();
-
-//                double drivingInches = 75;
-//                double wheelInches = drivingInches / Math.sqrt(2);
-//                encoderDrive(0.6, drivingInches, drivingInches, drivingInches, drivingInches);
 
             // Go to storage unit
             if(parkingPosition == ParkingPosition.STORAGE_UNIT) {
@@ -152,7 +147,6 @@ public class AutoCarouselBlue extends Hardware {
             }
             // When done put the pulley all the way back down so teleop starts with it at 0
             raiseClawPosAndStop(0,0.8);
-
 
         }
 
@@ -180,15 +174,17 @@ public class AutoCarouselBlue extends Hardware {
                 delaySelected = true;
 
             }
-            idle();
 
             telemetry.addData("Currently Selecting", "Delay");
-            telemetry.addData("DelaySelected",delaySelected);
             telemetry.addData("Press Dpad up to raise value","Press Dpad down to lower value");
             telemetry.addData("Press A to select","!");
             telemetry.addData("Current selection", delay);
             telemetry.update();
+            idle();
+
         }
+
+        // Make a list to iterate through with the options
         List<ParkingPosition> positions = new ArrayList<>();
         positions.add(ParkingPosition.STORAGE_UNIT);
         positions.add(ParkingPosition.WAREHOUSE_JUST_INSIDE);

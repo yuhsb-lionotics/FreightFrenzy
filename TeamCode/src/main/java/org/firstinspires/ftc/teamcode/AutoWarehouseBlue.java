@@ -75,18 +75,15 @@ public class AutoWarehouseBlue extends Hardware {
 
         switch (elementLocation){
             case LEFT:
-//                    raiseClawPosAndStop(LOW_POSITION, 0.7);
                 raiseClawPos(LOW_POSITION,0.7);
                 forwardInches = 0.7;
                 break;
             case MIDDLE:
-//                    raiseClawPosAndStop(MIDDLE_POSITION, 0.7);
                 raiseClawPos(MIDDLE_POSITION,0.7);
                 forwardInches = 2.5;
                 break;
             case RIGHT:
             case ERROR:
-//                    raiseClawPosAndStop(HIGH_POSITION, 0.7);
                 raiseClawPos(HIGH_POSITION,0.7);
                 forwardInches = 3;
                 break;
@@ -110,7 +107,6 @@ public class AutoWarehouseBlue extends Hardware {
         grabber.setPower(-1);
         sleep(1000);
         grabber.setPower(0);
-        telemetry.update();
 
         // move back
         raiseClawPos(LOW_POSITION,0.6);
@@ -118,7 +114,7 @@ public class AutoWarehouseBlue extends Hardware {
 
         // Park in Warehouse
         rotateToPos(90,1);
-        encoderDrive(0.8,37,37,37,37);
+        encoderDriveAnd(0.8,37,37,37,37);
 
         if(parkingPosition == ParkingPosition.WAREHOUSE_TOWARDS_SHARED_HUB || parkingPosition == ParkingPosition.WAREHOUSE_AGAINST_BACK_WALL) {
             encoderDriveAnd(0.8, -20, 20, -20, 20);

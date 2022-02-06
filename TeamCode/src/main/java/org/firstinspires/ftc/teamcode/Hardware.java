@@ -25,15 +25,14 @@ public class Hardware extends LinearOpMode {
     public boolean tryingToGrab = false;
     private double grabberPower = 0;
     private BNO055IMU imu;
-    double globalAngle, rotation;
     //encoder positions for clawPulley
     //3500 for top, 1700 for middle, 7700 for low, 0 for ground
-    public static final int  LOW_POSITION =  680; // new is 600
-    public static final int  MIDDLE_POSITION =  1800; // 1600
+    public static final int  LOW_POSITION =  680;
+    public static final int  MIDDLE_POSITION =  1800; //
     public static final int  HIGH_POSITION =  3470; //
     public static final int  SHARED_HUB_POSITION = 770; //@TODO: check this value
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // CHECK THIS
+    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // CHECK THIS - DONE
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference. Not sure what it is
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
@@ -107,9 +106,6 @@ public class Hardware extends LinearOpMode {
         parameters.loggingEnabled = false;
         imu = hardwareMap.get(BNO055IMU.class,"imu");
         imu.initialize(parameters);
-
-
-
 
         // make sure the imu gyro is calibrated before continuing.
         telemetry.addData("Status","Calibrating Gyro");
