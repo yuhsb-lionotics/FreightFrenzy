@@ -25,6 +25,8 @@ public class AutoWarehouseBlue extends Hardware {
     @Override
     public void runOpMode(){
         selectParameters();
+        hardwareSetup();
+        imuSetup();
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         webcam.setPipeline(pipeline);
@@ -46,8 +48,6 @@ public class AutoWarehouseBlue extends Hardware {
                 elementLocation = OpenCvDetector.ElementLocation.ERROR;
             }
         });
-        hardwareSetup();
-        imuSetup();
         /*
          * The INIT-loop:
          * This REPLACES waitForStart!
@@ -76,7 +76,7 @@ public class AutoWarehouseBlue extends Hardware {
         switch (elementLocation){
             case LEFT:
                 raiseClawPos(LOW_POSITION,0.7);
-                forwardInches = 0.7;
+                forwardInches = 0.9;
                 break;
             case MIDDLE:
                 raiseClawPos(MIDDLE_POSITION,0.7);
@@ -85,13 +85,13 @@ public class AutoWarehouseBlue extends Hardware {
             case RIGHT:
             case ERROR:
                 raiseClawPos(HIGH_POSITION,0.7);
-                forwardInches = 3;
+                forwardInches = 3.2 ;
                 break;
         }
 
         //@TODO: Combine these two driving commands
         //move diagonally towards the Shipping Hub
-        encoderDrive(0.8, 0, 33, 0, 33);
+        encoderDrive(0.6, 0, 33, 0, 33);
         while(clawPulley.isBusy()) {
             telemetry.addData("Status","waiting for clawPulley");
             telemetry.update();
@@ -114,13 +114,13 @@ public class AutoWarehouseBlue extends Hardware {
 
         // Park in Warehouse
         rotateToPos(90,1);
-        encoderDriveAnd(0.8,37,37,37,37);
+        encoderDriveAnd(0.6,37,37,37,37);
 
         if(parkingPosition == ParkingPosition.WAREHOUSE_TOWARDS_SHARED_HUB || parkingPosition == ParkingPosition.WAREHOUSE_AGAINST_BACK_WALL) {
-            encoderDriveAnd(0.8, -20, 20, -20, 20);
+            encoderDriveAnd(0.7, -19, 19, -19, 19);
         }
         if(parkingPosition == ParkingPosition.WAREHOUSE_AGAINST_BACK_WALL){
-            encoderDriveAnd(0.8,12,12,12,12);
+            encoderDriveAnd(0.7,12,12,12,12);
         }
 
         // When done put the pulley all the way back down so teleop starts with it at 0

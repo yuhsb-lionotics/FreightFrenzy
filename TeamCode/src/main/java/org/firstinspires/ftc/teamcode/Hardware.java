@@ -21,7 +21,7 @@ public class Hardware extends LinearOpMode {
     protected DcMotor frontLeft, frontRight, backLeft, backRight, clawPulley, carousel ;
     protected CRServo grabber;
     protected TouchSensor wheelTouchSensor;
-    protected Servo lift;
+    protected Servo tseLifter;
     public boolean tryingToGrab = false;
     private double grabberPower = 0;
     private BNO055IMU imu;
@@ -54,7 +54,7 @@ public class Hardware extends LinearOpMode {
         grabber = hardwareMap.crservo.get("grabber");
         carousel = hardwareMap.dcMotor.get("carousel");
         wheelTouchSensor = hardwareMap.touchSensor.get("wheel");
-        lift = hardwareMap.servo.get("lift");
+        tseLifter = hardwareMap.servo.get("lift");
 
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);

@@ -77,7 +77,7 @@ public class AutoCarouselBlue extends Hardware {
             switch (elementLocation){
                 case LEFT:
                     raiseClawPos(LOW_POSITION,0.7);
-                    forwardInches = 1;
+                    forwardInches = 1.1;
                     break;
                 case MIDDLE:
                     raiseClawPos(MIDDLE_POSITION,0.7);
@@ -86,12 +86,12 @@ public class AutoCarouselBlue extends Hardware {
                 case RIGHT:
                 case ERROR:
                     raiseClawPos(HIGH_POSITION,0.7);
-                    forwardInches = 3;
+                    forwardInches = 3.1;
                     break;
             }
             //@TODO: combine these two driving commands
             //move diagonally towards the Shipping Hub
-            encoderDrive(0.8, 33, 0, 33, 0);
+            encoderDrive(0.5, 33, 0, 33, 0);
             while(clawPulley.isBusy()) {
                 telemetry.addData("Status","waiting for clawPulley");
                 telemetry.update();
@@ -100,24 +100,25 @@ public class AutoCarouselBlue extends Hardware {
 
             //move forward a little
             encoderDriveAnd(0.3, forwardInches,  forwardInches, forwardInches, forwardInches);
+            sleep(1000);
             //release the pre-load box
             telemetry.addData("Status","releasing pre-load box");
             telemetry.update();
             grabber.setPower(-1);
-            sleep(1000);
+            sleep(1200);
             grabber.setPower(0);
 
 
             // move back
             telemetry.addData("Status","Going to Carousel");
             telemetry.update();
-            encoderDriveAnd(0.8, -(12.5 +forwardInches), -(12.5 +forwardInches), -(12.5 +forwardInches), -(12.5 +forwardInches));
+            encoderDriveAnd(0.7, -(12.5 +forwardInches), -(12.5 +forwardInches), -(12.5 +forwardInches), -(12.5 +forwardInches));
             rotateToPos(90, 1);
             raiseClawPos(LOW_POSITION,0.6);
-            encoderDriveAnd(0.8,-32,-32,-32,-32);
+            encoderDriveAnd(0.7,-32,-32,-32,-32);
             double before = getHeading();
             //approach the carousel diagonally
-            encoderDrive(0.3,0,-5,0,-5);
+            encoderDrive(0.3,0,-7,0,-7);
 
 
             // Spin duck
@@ -134,7 +135,7 @@ public class AutoCarouselBlue extends Hardware {
             telemetry.update();
             //this needs to move a little to the right too so the duck doesn't get in its way
             //or Raphi can add something to stop the duck from going underneath the robot
-            encoderDriveAnd(0.8, 3, 3, 3, 3);
+            encoderDriveAnd(0.7, 3, 3, 3, 3);
 
             telemetry.addData("status", "rotating");
             telemetry.update();

@@ -23,3 +23,4 @@ Expansion hub:
     Servos:
 
         Port 0 - grabber
+        Port 1 - lift
