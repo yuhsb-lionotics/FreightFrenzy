@@ -77,16 +77,19 @@ public class AutoCarouselBlue extends Hardware {
             switch (elementLocation){
                 case LEFT:
                     raiseClawPos(LOW_POSITION,0.7);
-                    forwardInches = 1.1;
+//                    forwardInches = 1.1;
+                    forwardInches = 1.6;
                     break;
                 case MIDDLE:
                     raiseClawPos(MIDDLE_POSITION,0.7);
-                    forwardInches = 2.5;
+//                    forwardInches = 2.5;
+                    forwardInches = 3;
                     break;
                 case RIGHT:
                 case ERROR:
                     raiseClawPos(HIGH_POSITION,0.7);
-                    forwardInches = 3.1;
+//                    forwardInches = 3.1;
+                    forwardInches = 3.6;
                     break;
             }
             //@TODO: combine these two driving commands
@@ -161,7 +164,7 @@ public class AutoCarouselBlue extends Hardware {
         // Delay
         // Parking Position
         // Start location ?
-        while(!delaySelected && !isStopRequested()){
+        while(!delaySelected && !isStarted() && !isStopRequested()){
             dpadUp.update(gamepad1.dpad_up);
             dpadDown.update(gamepad1.dpad_down);
             a.update(gamepad1.a);
@@ -193,7 +196,7 @@ public class AutoCarouselBlue extends Hardware {
         positions.add(ParkingPosition.WAREHOUSE_AGAINST_BACK_WALL);
         int num = 0;
 
-        while(!parkingSelected && !isStopRequested()){
+        while(!parkingSelected && !isStarted() && !isStopRequested()){
             dpadUp.update(gamepad1.dpad_up);
             dpadDown.update(gamepad1.dpad_down);
             a.update(gamepad1.a);
