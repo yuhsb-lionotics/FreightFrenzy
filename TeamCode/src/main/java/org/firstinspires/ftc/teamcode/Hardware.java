@@ -63,7 +63,7 @@ public class Hardware extends LinearOpMode {
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
         grabber.setDirection(DcMotor.Direction.REVERSE);
-        carousel.setDirection(DcMotor.Direction.FORWARD);
+        carousel.setDirection(DcMotor.Direction.REVERSE);
 
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

@@ -24,7 +24,7 @@ public class AutoCarouselRed extends AutoCarouselBlue {
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         grabber.setDirection(DcMotor.Direction.REVERSE);
-        carousel.setDirection(DcMotor.Direction.REVERSE);
+        carousel.setDirection(DcMotor.Direction.FORWARD);
 
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
 @Autonomous(name = "Auto Warehouse Red")
 public class AutoWarehouseRed extends AutoWarehouseBlue{
     @Override
@@ -22,7 +23,7 @@ public class AutoWarehouseRed extends AutoWarehouseBlue{
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         grabber.setDirection(DcMotor.Direction.REVERSE);
-        carousel.setDirection(DcMotor.Direction.REVERSE);
+        carousel.setDirection(DcMotor.Direction.FORWARD);
 
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
