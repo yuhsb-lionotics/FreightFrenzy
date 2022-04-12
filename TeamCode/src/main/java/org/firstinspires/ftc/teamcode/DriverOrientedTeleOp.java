@@ -27,13 +27,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 /**
  * This file contains an example of a Linear "OpMode".
@@ -62,8 +67,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Basic: Omni Linear OpMode", group="Linear Opmode")
-@Disabled
-public class BasicOmniOpMode_Linear extends LinearOpMode {
+public class DriverOrientedTeleOp extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -71,17 +75,21 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+    BNO055IMU imu;
+
 
     @Override
     public void runOpMode() {
 
+
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-
+        leftFrontDrive = hardwareMap.dcMotor.get("frontLeft");
+        rightFrontDrive = hardwareMap.dcMotor.get("frontRight");
+        rightBackDrive = hardwareMap.dcMotor.get("backRight");
+        leftBackDrive = hardwareMap.dcMotor.get("backLeft");
+        imu = hardwareMap.get(BNO055IMU.class,"imu");
+        imuSetup();
         // Most robots need the motors on one side to be reversed to drive forward.
         // When you first test your robot, push the left joystick forward
         // and flip the direction ( FORWARD <-> REVERSE ) of any wheel that runs backwards
@@ -93,7 +101,6 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
         waitForStart();
         runtime.reset();
 
@@ -102,8 +109,12 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral =  gamepad1.left_stick_x;
+//            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double forwardPower = - gamepad1.left_stick_y;
+            double rightPower = gamepad1.left_stick_x;
+            double heading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
+            double axial =  rightPower * -Math.sin(heading) + forwardPower * Math.cos(heading);
+            double lateral = rightPower * Math.cos(heading) + forwardPower * Math.sin(heading);
             double yaw     =  gamepad1.right_stick_x;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
@@ -117,7 +128,7 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             // This ensures that the robot maintains the desired motion.
             max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
             max = Math.max(max, Math.abs(leftBackPower));
-            max = Math.max(max, Math.abs(rightBackPower));
+            max = Math.max(max, Math.abs(rightBackPower)); //yes theta == heaDING == imu
 
             if (max > 1.0) {
                 leftFrontPower  /= max;
@@ -153,6 +164,37 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+            telemetry.addData("heading", heading);
             telemetry.update();
         }
-    }}
+
+    }
+    public void imuSetup() {
+        // Retrieve and initialize the IMU. The IMU is expected to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "IMU",
+        // and named "imu".
+        // This is built in to Control Hubs and Expansion Hubs, and should be in the config by default
+        telemetry.addData("Status","Setting Up IMU");
+        telemetry.update();
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
+        imu = hardwareMap.get(BNO055IMU.class,"imu");
+        imu.initialize(parameters);
+
+        // make sure the imu gyro is calibrated before continuing.
+        telemetry.addData("Status","Calibrating Gyro");
+        telemetry.update();
+        while (!isStopRequested() && !imu.isGyroCalibrated()) {
+            sleep(50);
+            idle();
+        }
+
+        telemetry.addData("Status:", "IMU Setup Complete");
+        telemetry.update();
+    }
+
+
+}
