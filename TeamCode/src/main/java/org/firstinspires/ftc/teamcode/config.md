@@ -2,24 +2,24 @@ Control hub:
 
     Motors:
 
-        Port 0 - clawPulley
-        Port 1 - frontLeft
-        Port 2 - Nothing
-        Port 3 - carousel
+        Port 0 - frontRight - Neverest40
+        Port 1 - frontLeft - Neverest40
+        Port 2 - backRight - Neverest40
+        Port 3 - backLeft - Neverest40
 
-    I2C:
-
-        Port 1: wheel
+    Digital Devices:
+	Port 1 - wheel - REV Touch Sensor
 
 Expansion hub:
 
     Motors:
 
-        Port 0 - Nothing
-        Port 1 - backLeft
-        Port 2 - backRight
-        Port 3 - frontRight
+        Port 0 - carousel - Tetrix
+        Port 1 - Nothing - Nothing
+        Port 2 - clawPulley - Neverest40
+        Port 3 - barrierClimber - Tetrix
 
     Servos:
 
-        Port 0 - grabber
+        Port 0 - grabber - continous rotation servo
+        //need to adjust config and code for 2 cr servos
