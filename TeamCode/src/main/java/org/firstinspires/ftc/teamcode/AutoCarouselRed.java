@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Autonomous(name="Red Carousel")
 public class AutoCarouselRed extends AutoCarouselBlue {
@@ -14,7 +15,8 @@ public class AutoCarouselRed extends AutoCarouselBlue {
         backLeft = hardwareMap.dcMotor.get("backRight");
         backRight = hardwareMap.dcMotor.get("backLeft");
         clawPulley = hardwareMap.dcMotor.get("clawPulley");
-        grabber = hardwareMap.crservo.get("grabber");
+        grabberL = hardwareMap.crservo.get("grabberL");
+        grabberR = hardwareMap.crservo.get("grabberR");
         carousel = hardwareMap.dcMotor.get("carousel");
         wheelTouchSensor = hardwareMap.touchSensor.get("wheel");
 
@@ -23,7 +25,8 @@ public class AutoCarouselRed extends AutoCarouselBlue {
         backRight.setDirection(DcMotor.Direction.REVERSE);
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
-        grabber.setDirection(DcMotor.Direction.REVERSE);
+        grabberL.setDirection(DcMotor.Direction.REVERSE);
+        grabberR.setDirection(DcMotor.Direction.FORWARD);
         carousel.setDirection(DcMotor.Direction.REVERSE);
 
 

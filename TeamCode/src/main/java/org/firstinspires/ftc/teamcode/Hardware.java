@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -19,9 +20,8 @@ public class Hardware extends LinearOpMode {
     // Good Luck!
     //You should put constants here
     protected DcMotor frontLeft, frontRight, backLeft, backRight, clawPulley, carousel ;
-    protected CRServo grabber;
+    protected CRServo grabberL, grabberR;
     protected TouchSensor wheelTouchSensor;
-    protected Servo tseLifter;
     public boolean tryingToGrab = false;
     private double grabberPower = 0;
     private BNO055IMU imu;
@@ -51,7 +51,8 @@ public class Hardware extends LinearOpMode {
         backRight = hardwareMap.dcMotor.get("backRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         clawPulley = hardwareMap.dcMotor.get("clawPulley");
-        grabber = hardwareMap.crservo.get("grabber");
+        grabberL = hardwareMap.crservo.get("grabberL");
+        grabberR = hardwareMap.crservo.get("grabberR");
         carousel = hardwareMap.dcMotor.get("carousel");
         wheelTouchSensor = hardwareMap.touchSensor.get("wheel");
 
@@ -60,7 +61,8 @@ public class Hardware extends LinearOpMode {
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
-        grabber.setDirection(DcMotor.Direction.REVERSE);
+        grabberL.setDirection(DcMotor.Direction.REVERSE);
+        grabberR.setDirection(DcMotor.Direction.FORWARD);
         carousel.setDirection(DcMotor.Direction.FORWARD);
 
 
@@ -421,7 +423,8 @@ public class Hardware extends LinearOpMode {
         } else {
             tryingToGrab = true;
             grabberPower = power;
-            grabber.setPower(grabberPower);
+            grabberL.setPower(grabberPower);
+            grabberR.setPower(grabberPower);
         }
     }
 
@@ -442,7 +445,8 @@ public class Hardware extends LinearOpMode {
     public void stopGrabbing() {
         tryingToGrab = false;
         grabberPower = 0;
-        grabber.setPower(0);
+        grabberL.setPower(0);
+        grabberR.setPower(0);
     }
 
     // Last thing is an empty runOpMode because it's a linearopmode

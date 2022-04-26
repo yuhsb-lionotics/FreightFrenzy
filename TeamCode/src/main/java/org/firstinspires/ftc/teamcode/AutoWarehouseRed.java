@@ -12,7 +12,8 @@ public class AutoWarehouseRed extends AutoWarehouseBlue{
         backLeft = hardwareMap.dcMotor.get("backRight");
         backRight = hardwareMap.dcMotor.get("backLeft");
         clawPulley = hardwareMap.dcMotor.get("clawPulley");
-        grabber = hardwareMap.crservo.get("grabber");
+        grabberL = hardwareMap.crservo.get("grabberL");
+        grabberR = hardwareMap.crservo.get("grabberR");
         carousel = hardwareMap.dcMotor.get("carousel");
         wheelTouchSensor = hardwareMap.touchSensor.get("wheel");
 
@@ -21,7 +22,8 @@ public class AutoWarehouseRed extends AutoWarehouseBlue{
         backRight.setDirection(DcMotor.Direction.REVERSE);
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
-        grabber.setDirection(DcMotor.Direction.REVERSE);
+        grabberL.setDirection(DcMotor.Direction.REVERSE);
+        grabberR.setDirection(DcMotor.Direction.FORWARD);
         carousel.setDirection(DcMotor.Direction.REVERSE);
 
 

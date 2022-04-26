@@ -107,10 +107,11 @@ public class AutoCarouselBlue extends Hardware {
             //release the pre-load box
             telemetry.addData("Status","releasing pre-load box");
             telemetry.update();
-            grabber.setPower(-1);
+            grabberL.setPower(-1);
+            grabberR.setPower(-1);
             sleep(1200);
-            grabber.setPower(0);
-
+            grabberL.setPower(0);
+            grabberR.setPower(0);
 
             // move back
             telemetry.addData("Status","Going to Carousel");

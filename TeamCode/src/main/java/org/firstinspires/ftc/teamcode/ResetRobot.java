@@ -36,9 +36,11 @@ public class ResetRobot extends Hardware{
 
             // Eject the cube if b is pressed
             if(gamepad1.b && !tryingToGrab){
-                grabber.setPower(-0.9);
+                grabberL.setPower(-0.9);
+                grabberR.setPower(-0.9);
             } else if (!tryingToGrab){
-                grabber.setPower(0);
+                grabberL.setPower(0);
+                grabberR.setPower(0);
             }
             telemetry.addData("TryingToGrab:",tryingToGrab);
             telemetry.addData("Pressed",wheelTouchSensor.isPressed());

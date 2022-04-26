@@ -104,9 +104,11 @@ public class AutoWarehouseBlue extends Hardware {
         telemetry.update();
 
         //release the pre-load box
-        grabber.setPower(-1);
+        grabberL.setPower(-1);
+        grabberR.setPower(-1);
         sleep(1000);
-        grabber.setPower(0);
+        grabberL.setPower(0);
+        grabberR.setPower(0);
 
         // move back
         raiseClawPos(LOW_POSITION,0.6);

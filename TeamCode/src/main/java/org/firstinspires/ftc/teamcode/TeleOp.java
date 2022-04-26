@@ -78,9 +78,11 @@ public class TeleOp extends Hardware{
             // Eject the cube if b is pressed
             if((gamepad1.b || gamepad2.b)) {
                 if (tryingToGrab) stopGrabbing();
-                grabber.setPower(-0.9);
+                grabberL.setPower(-0.9);
+                grabberR.setPower(-0.9);
             } else if (!tryingToGrab){
-                grabber.setPower(0);
+                grabberL.setPower(0);
+                grabberR.setPower(0);
             }
             telemetry.addData("TryingToGrab:",tryingToGrab);
             telemetry.addData("Pressed",wheelTouchSensor.isPressed());
@@ -116,19 +118,10 @@ public class TeleOp extends Hardware{
                 carousel.setPower(0);
             }
 
-            if(gamepad2.left_trigger > 0){
-                //high position
-                tseLifter.setPosition(0.4);
-            } else if (gamepad2.right_trigger > 0){
-                //low position
-                tseLifter.setPosition(0);
-            }
-
             telemetry.addData("ClawPos", clawPos);
             telemetry.addData("clawPulley mode", clawPulley.getMode());
             telemetry.addData("clawPulley position", clawPulley.getCurrentPosition());
             telemetry.addData("clawPulley power", clawPulley.getPower());
-            telemetry.addData("lift pos", tseLifter.getPosition());
             telemetry.addData("gamepad2 left trigger", gamepad2.left_trigger);
             telemetry.update();
             }
