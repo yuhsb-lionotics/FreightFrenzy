@@ -54,7 +54,6 @@ public class Hardware extends LinearOpMode {
         grabber = hardwareMap.crservo.get("grabber");
         carousel = hardwareMap.dcMotor.get("carousel");
         wheelTouchSensor = hardwareMap.touchSensor.get("wheel");
-        tseLifter = hardwareMap.servo.get("lift");
 
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
