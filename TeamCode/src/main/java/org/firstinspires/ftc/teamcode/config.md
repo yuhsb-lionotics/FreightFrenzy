@@ -21,5 +21,6 @@ Expansion hub:
 
     Servos:
 
-        Port 0 - grabber - continous rotation servo
-        //need to adjust config and code for 2 cr servos
+        Port 0 - grabberL - continous rotation servo
+	Port 2 - grabberR - continous rotation servo
+        
