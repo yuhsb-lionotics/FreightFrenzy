@@ -24,8 +24,6 @@ public class AutoCarouselBlue extends Hardware {
 
         @Override
         public void runOpMode(){
-            // Select parameters for the match
-            selectParameters();
             // Setup OpenCV pipeline
             int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
             webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -50,9 +48,14 @@ public class AutoCarouselBlue extends Hardware {
             });
             hardwareSetup();
             imuSetup();
+            // Select parameters for the match
+            selectParameters();
+
             /*
              * The INIT-loop:
              * This REPLACES waitForStart!
+             * TODO: this currently is skipped if we press play during selectParameters(). Figure out how to solve this.
+             *  maybe put the stuff in this loop inside selectParameters()
              */
             while (!isStarted() && !isStopRequested())
             {
@@ -128,7 +131,7 @@ public class AutoCarouselBlue extends Hardware {
             // Spin duck
             telemetry.addData("Status","Spinning Duck");
             telemetry.update();
-            carousel.setPower(-1);
+            carousel.setPower(1); // the direction was flipped because it was inexplicably going the wrong way
             sleep(3000);
             carousel.setPower(0);
 
