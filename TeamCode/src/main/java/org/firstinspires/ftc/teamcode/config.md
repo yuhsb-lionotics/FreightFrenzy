@@ -6,7 +6,8 @@ Control hub:
         Port 1 - frontLeft - Neverest40
         Port 2 - backRight - Neverest40
         Port 3 - backLeft - Neverest40
-
+    Servos:
+    Port 5 - grabberL - continous rotation servo
     Digital Devices:
 	Port 1 - wheel - REV Touch Sensor
 
@@ -20,7 +21,5 @@ Expansion hub:
         Port 3 - barrierClimber - Tetrix
 
     Servos:
-
-        Port 0 - grabberL - continous rotation servo
 	Port 2 - grabberR - continous rotation servo
         
