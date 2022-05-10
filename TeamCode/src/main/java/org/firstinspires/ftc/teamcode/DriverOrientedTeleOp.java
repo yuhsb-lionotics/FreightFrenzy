@@ -67,7 +67,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
  */
 
 @TeleOp(name="Basic: Omni Linear OpMode", group="Linear Opmode")
-public class DriverOrientedTeleOp extends LinearOpMode {
+public class DriverOrientedTeleOp extends Hardware {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -75,6 +75,8 @@ public class DriverOrientedTeleOp extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+    Button gamepad1a = new Button(false);
+    Button gamepad2a = new Button(false);
     BNO055IMU imu;
 
 
@@ -101,12 +103,17 @@ public class DriverOrientedTeleOp extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        int clawPos = 1;
         waitForStart();
         runtime.reset();
+        gamepad1a.update(gamepad1.a);
+        gamepad2a.update(gamepad2.a);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             double max;
+            gamepad1a.update(gamepad1.a);
+            gamepad2a.update(gamepad2.a);
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
 //            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
@@ -166,8 +173,66 @@ public class DriverOrientedTeleOp extends LinearOpMode {
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.addData("heading", heading);
             telemetry.update();
-        }
 
+            //turn grabbing on/off when button A is pressed
+            if(gamepad2a.isNewlyPressed() || gamepad1a.isNewlyPressed()) {
+                if(tryingToGrab) stopGrabbing();
+                else startGrabbing(0.5);
+            }
+
+            //check if grabbing needs to be stopped, and stop if so
+            updateGrabbing();
+
+            // Eject the cube if b is pressed
+            if((gamepad1.b || gamepad2.b)) {
+                if (tryingToGrab) stopGrabbing();
+                grabberL.setPower(-0.9);
+                grabberR.setPower(-0.9);
+            } else if (!tryingToGrab){
+                grabberL.setPower(0);
+                grabberR.setPower(0);
+            }
+            telemetry.addData("TryingToGrab:",tryingToGrab);
+            telemetry.addData("Pressed",wheelTouchSensor.isPressed());
+            telemetry.addData("gamepad2b",gamepad2.b);
+
+            //Control clawPulley
+            if (gamepad2.dpad_up) {
+                clawPulley.setPower(0.6);
+                sleep(50);
+            } else if (gamepad2.dpad_down) {
+                clawPulley.setPower(-0.7);
+            } else if (gamepad2.dpad_left) {
+                //raise claw to highest level of shipping hub
+                raiseClawPos(HIGH_POSITION,0.7);
+            } else if (gamepad2.dpad_right) {
+                raiseClawPos(0, 0.6);
+            } else if(!clawPulley.isBusy()){
+                clawPulley.setPower(0);
+            }
+            //stop the claw pulley if it's at its destination
+            updateRaise();
+
+            //control carousel
+            if (gamepad2.x) {
+                carousel.setPower(1);
+            } else if (gamepad2.y){
+                carousel.setPower(-1);
+            } else if (gamepad1.x) {
+                carousel.setPower(1);
+            } else if (gamepad1.y){
+                carousel.setPower(-1);
+            } else{
+                carousel.setPower(0);
+            }
+
+            telemetry.addData("ClawPos", clawPos);
+            telemetry.addData("clawPulley mode", clawPulley.getMode());
+            telemetry.addData("clawPulley position", clawPulley.getCurrentPosition());
+            telemetry.addData("clawPulley power", clawPulley.getPower());
+            telemetry.addData("gamepad2 left trigger", gamepad2.left_trigger);
+            telemetry.update();
+        }
     }
     public void imuSetup() {
         // Retrieve and initialize the IMU. The IMU is expected to be attached to an I2C port
