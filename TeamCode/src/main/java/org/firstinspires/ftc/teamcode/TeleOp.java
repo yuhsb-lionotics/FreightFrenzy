@@ -18,6 +18,7 @@ public class TeleOp extends Hardware{
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         int clawPos = 1;
+        boolean climbingBarrier = false;
         waitForStart();
 
         //Update the button objects with the newest value
@@ -66,8 +67,16 @@ public class TeleOp extends Hardware{
                 tankControl(maxDrivingPower);
             }
 
+            //Barrier climber
+            if(gamepad1a.isNewlyPressed()) {climbingBarrier = !climbingBarrier;}
+            if(climbingBarrier) {
+                barrierClimber.setPower((backLeft.getPower() - backRight.getPower()) / 2);
+            } else {
+                barrierClimber.setPower(0);
+            }
+
             //turn grabbing on/off when button A is pressed
-            if(gamepad2a.isNewlyPressed() || gamepad1a.isNewlyPressed()) {
+            if(gamepad2a.isNewlyPressed()) {
                 if(tryingToGrab) stopGrabbing();
                 else startGrabbing(0.5);
             }
@@ -76,7 +85,7 @@ public class TeleOp extends Hardware{
             updateGrabbing();
 
             // Eject the cube if b is pressed
-            if((gamepad1.b || gamepad2.b)) {
+            if(gamepad2.b) {
                 if (tryingToGrab) stopGrabbing();
                 grabberL.setPower(-0.9);
                 grabberR.setPower(-0.9);

@@ -54,10 +54,9 @@ public class AutoCarouselBlue extends Hardware {
             /*
              * The INIT-loop:
              * This REPLACES waitForStart!
-             * TODO: this currently is skipped if we press play during selectParameters(). Figure out how to solve this.
-             *  maybe put the stuff in this loop inside selectParameters()
              */
-            while (!isStarted() && !isStopRequested())
+            int i = 0; // make sure that this runs for at least one second even if play has already been pressed during selectParameters()
+            while ((i < 10 || !isStarted()) && !isStopRequested())
             {
                 elementLocation = pipeline.getLocation();
                 telemetry.addData("Realtime analysis", elementLocation);
@@ -68,6 +67,7 @@ public class AutoCarouselBlue extends Hardware {
 
                 // Don't burn CPU cycles busy-looping in this sample
                 sleep(100);
+                i++;
             }
 
            // When we hit this point start has been pressed. First thing to do is save where we have the marker as being

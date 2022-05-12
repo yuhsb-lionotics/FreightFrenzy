@@ -4,8 +4,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -19,7 +17,7 @@ public class Hardware extends LinearOpMode {
 
     // Good Luck!
     //You should put constants here
-    protected DcMotor frontLeft, frontRight, backLeft, backRight, clawPulley, carousel ;
+    protected DcMotor frontLeft, frontRight, backLeft, backRight, clawPulley, carousel, barrierClimber;
     protected CRServo grabberL, grabberR;
     protected TouchSensor wheelTouchSensor;
     public boolean tryingToGrab = false;
@@ -54,6 +52,7 @@ public class Hardware extends LinearOpMode {
         grabberL = hardwareMap.crservo.get("grabberL");
         grabberR = hardwareMap.crservo.get("grabberR");
         carousel = hardwareMap.dcMotor.get("carousel");
+        barrierClimber = hardwareMap.dcMotor.get("barrierClimber");
         wheelTouchSensor = hardwareMap.touchSensor.get("wheel");
 
 
@@ -64,6 +63,7 @@ public class Hardware extends LinearOpMode {
         grabberL.setDirection(DcMotor.Direction.REVERSE);
         grabberR.setDirection(DcMotor.Direction.FORWARD);
         carousel.setDirection(DcMotor.Direction.FORWARD);
+        barrierClimber.setDirection(DcMotor.Direction.REVERSE);
 
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -71,6 +71,7 @@ public class Hardware extends LinearOpMode {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         carousel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        barrierClimber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         clawPulley.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 

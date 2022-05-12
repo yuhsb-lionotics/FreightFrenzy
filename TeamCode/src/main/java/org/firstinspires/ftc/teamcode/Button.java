@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+//TODO: make a subclass called Toggle
 public class Button {
     private boolean currentlyPressed; // Whether the button was pushed during the most recent call of update()
     private boolean previouslyPressed; // Whether the button was pushed during the previous call of update()
